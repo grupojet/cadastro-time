@@ -8,7 +8,7 @@
 <body>
 <div class="wrap">
   <div class="hero">
-    <img class="logo-h" width="180" height="42" src="https://cdn.jsdelivr.net/gh/grupojet/cadastro-time@c476ffeceef412f0a2fcf8184fbbf971fa3e40ca/logo.svg" alt="Grupo Jet"/>
+    <img class="logo-h" width="180" height="42" src="https://cdn.jsdelivr.net/gh/grupojet/cadastro-time@de7945a557870dde3ef969e7ac07c546735a512d/logo.png" alt="Grupo Jet"/>
     <p class="kicker">Grupo Jet · cadastro do time · web</p>
     <div class="accent"></div>
     <h1>Quem é quem</h1>
