@@ -1,19 +1,4 @@
-ener('click', clearFoto);
-
-  function dados(){
-    var key = papelEl.value;
-    var papelLabel = '';
-    if (key === 'outro') papelLabel = document.getElementById('papel_outro').value.trim() || 'Outro';
-    else if (key) papelLabel = LABELS[key] || key;
-    var atividades = Array.prototype.map.call(
-      document.querySelectorAll('#atividades .check:not(.hidden) input:checked'),
-      function(i){ return i.value; }
-    );
-    var vinculo = (key === 'socio') ? 'Sócio' : vinculoEl.value;
-    return {
-      tipo: 'cadastro_time_jota',
-      versao: 'web',
-      nome: document.getElementById('nome').value.trim(),
+.trim(),
       whatsapp: document.getElementById('wa').value.trim(),
       papel: papelLabel,
       papel_key: key,
@@ -84,7 +69,20 @@ ener('click', clearFoto);
     } catch (e) {}
 
     if (!JOTA_CADASTRO_WEBHOOK || JOTA_CADASTRO_WEBHOOK.indexOf('PLACEHOLDER') >= 0) {
-      ok.textContent = 'Webhook do JOTA ainda não configurado. Avisa o Ruan/JOTA.';
+      // Fallback temporário: manda resumo pro Zap do J (0800) até o webhook estar plugado.
+      var JOTA_WA = '5508006483496';
+      var encoded = encodeURIComponent(texto);
+      if (encoded.length > 1800) {
+        texto = texto.split('\n').filter(function(line){ return line.indexOf('Obs:') !== 0; }).join('\n');
+        encoded = encodeURIComponent(texto);
+      }
+      var httpsUrl = 'https://wa.me/' + JOTA_WA + '?text=' + encoded;
+      var schemeUrl = 'whatsapp://send?phone=' + JOTA_WA + '&text=' + encoded;
+      var isiOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+      ok.textContent = 'Webhook ainda não plugado — abrindo o Zap do J com seu cadastro…';
+      try { window.location.href = isiOS ? schemeUrl : httpsUrl; } catch (e1) {
+        try { window.open(httpsUrl, '_blank'); } catch (e2) {}
+      }
       btn.disabled = false;
       return;
     }
