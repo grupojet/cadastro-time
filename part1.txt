@@ -1,10 +1,4 @@
-t-align: center; color: #6B6B6B; font-size: 15px; font-weight: 500; }
-</style>
-</head>
-<body>
-<div class="wrap">
-  <div class="hero">
-    <img class="logo-h" width="180" height="42" src="https://cdn.jsdelivr.net/gh/grupojet/cadastro-time@de7945a557870dde3ef969e7ac07c546735a512d/logo.png" alt="Grupo Jet"/>
+ass="logo-h" width="180" height="42" src="https://cdn.jsdelivr.net/gh/grupojet/cadastro-time@de7945a557870dde3ef969e7ac07c546735a512d/logo.png" alt="Grupo Jet"/>
     <p class="kicker">Grupo Jet · cadastro do time · web</p>
     <div class="accent"></div>
     <h1>Quem é quem</h1>
@@ -100,4 +94,10 @@ t-align: center; color: #6B6B6B; font-size: 15px; font-weight: 500; }
     </div>
 
     <label class="field" for="obs">Observação (opcional)</label>
-    <texta
+    <textarea id="obs" placeholder="Turno, equipe, base — só se ajudar"></textarea>
+  </section>
+
+  <div class="actions">
+    <button class="primary" type="button" id="btnSend">Enviar dados</button>
+    <button class="ghost" type="button" id="btnCopy">Copiar resumo</button>
+<button class="ghost" typ
