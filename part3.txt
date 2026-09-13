@@ -1,0 +1,30 @@
+
+    var texto = resumo(dados());
+    if (!showOut(texto)) return;
+    var httpsUrl = 'https://wa.me/' + JOTA_WA + '?text=' + encodeURIComponent(texto);
+    window.location.href = httpsUrl;
+  };
+  document.getElementById('btnCopy').onclick = async function(){
+    var texto = resumo(dados());
+    if (!showOut(texto)) return;
+    try {
+      await navigator.clipboard.writeText(texto);
+      document.getElementById('ok').textContent = 'Copiado.';
+      document.getElementById('ok').style.display = 'block';
+    } catch (e) {
+      document.getElementById('ok').textContent = 'Não deu pra copiar. Use Enviar no WhatsApp.';
+      document.getElementById('ok').style.display = 'block';
+    }
+  };
+  document.getElementById('btnJson').onclick = function(){
+    var p = dados();
+    var blob = new Blob([JSON.stringify(p, null, 2)], {type:'application/json'});
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'cadastro-time-grupo-jet.json';
+    a.click();
+  };
+})();
+</script>
+</body>
+</html>
