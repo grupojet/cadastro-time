@@ -1,4 +1,14 @@
-ade base <span class="req">*</span></label>
+culo <span class="req">*</span></label>
+      <select id="vinculo">
+        <option value="">Toque para escolher…</option>
+        <option value="CLT">CLT</option>
+        <option value="PJ">PJ</option>
+        <option value="Estágio">Estágio</option>
+        <option value="Outro">Outro</option>
+      </select>
+    </div>
+
+    <label class="field" for="cidade">Cidade base <span class="req">*</span></label>
     <input id="cidade" placeholder="Ex.: Goiânia"/>
 
     <div id="wrap_gestor" class="hidden">
@@ -128,12 +138,4 @@ ade base <span class="req">*</span></label>
     document.getElementById('foto_galeria').value = '';
     var prev = document.getElementById('foto_preview');
     prev.removeAttribute('src'); prev.classList.remove('show');
-    document.getElementById('photo_box').classList.remove('has-img');
-    document.getElementById('foto_clear').classList.remove('show');
-    document.getElementById('foto_status').textContent = 'Opcional agora — recomendado.';
-  }
-  document.getElementById('foto_camera').addEventListener('change', function(){ setFoto(this.files && this.files[0]); });
-  document.getElementById('foto_galeria').addEventListener('change', function(){ setFoto(this.files && this.files[0]); });
-  document.getElementById('foto_clear').addEventListener('click', clearFoto);
-
-  function d
+    document.getEle
