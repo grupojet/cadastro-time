@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no, viewport-fit=cover"/>
+<meta name="theme-color" content="#E8E8E8"/>
+<meta name="format-detection" content="telephone=no"/>
+<title>Cadastro do time | Grupo Jet</title>
+<style>
+  html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+  html, body { margin: 0; width: 100%; max-width: 100%; overflow-x: hidden; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    background: #E8E8E8; color: #3D3D3D; font-size: 18px; line-height: 1.4;
+    padding: calc(16px + env(safe-area-inset-top, 0px)) 16px 0;
+  }
+  img { max-width: 100%; height: auto; display: block; border: 0; }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: rgba(255,87,34,.15); }
+  .wrap { width: 100%; max-width: 100%; margin: 0 auto; }
+  .hero { padding: 2px 0 18px; }
+  .logo-h { width: 180px; max-width: 70%; height: auto; }
+  .kicker { margin: 14px 0 0; font-size: 13px; font-weight: 600; letter-spacing: .10em; text-transform: uppercase; color: #6B6B6B; }
+  .accent { height: 3px; width: 40px; background: #FF5722; border-radius: 99px; margin: 10px 0 14px; }
+  h1 { font-size: 28px; margin: 0 0 8px; color: #5A5A5A; font-weight: 700; letter-spacing: -.02em; }
+  .lede { color: #6B6B6B; font-size: 17px; margin: 0; }
+  .block { background: #fff; border: 1px solid #D0D0D0; border-radius: 14px; padding: 18px 16px 20px; margin-bottom: 12px; }
+  .block-title { display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #5A5A5A; margin: 0 0 4px; }
+  .block-title::before { content: ""; width: 3px; height: 14px; background: #FF5722; border-radius: 99px; flex: 0 0 auto; }
+  .block-help { color: #8A8A8A; font-size: 15px; margin: 0 0 8px; }
+  label.field { display: block; font-size: 15px; font-weight: 600; color: #5A5A5A; margin: 16px 0 8px; }
+  .req { color: #FF5722; font-weight: 700; }
+  input, select, textarea {
+    width: 100%; max-width: 100%; padding: 14px 12px; border: 1px solid #D0D0D0; border-radius: 12px;
+    font-size: 17px; font-family: inherit; background: #fff; color: #3D3D3D; min-height: 52px; outline: none;
+  }
+  /* iOS: keep native select look (picker wheel) — do NOT zero appearance */
+  select {
+    -webkit-appearance: menulist; appearance: menulist;
+    background-color: #fff;
+  }
+  input, textarea { -webkit-appearance: none; appearance: none; }
+  input:focus, select:focus, textarea:focus { border-color: #FF5722; box-shadow: 0 0 0 3px rgba(255,87,34,.16); }
+  input::placeholder, textarea::placeholder { color: #A8A8A8; }
+  textarea { min-height: 96px; resize: vertical; line-height: 1.4; }
+  .hint { font-size: 14px; color: #8A8A8A; margin: 6px 0 0; }
+  .hidden { display: none !important; }
+  .check-list { display: flex; flex-direction: column; gap: 0; margin-top: 4px; }
+  .check {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 4px; border-bottom: 1px solid #EEE; min-height: 52px;
+    font-size: 17px; color: #3D3D3D;
+  }
+  .check:last-child { border-bottom: 0; }
+  .check input[type="checkbox"] {
+    width: 24px; height: 24px; min-height: 24px; min-width: 24px;
+    margin: 0; flex: 0 0 auto;
+    -webkit-appearance: checkbox; appearance: checkbox;
+    accent-color: #FF5722;
+  }
+  .actions {
+    position: sticky; bottom: 0; z-index: 4; margin: 12px 0 0;
+    padding: 12px 0 calc(16px + env(safe-area-inset-bottom, 0px)); background: #E8E8E8;
+  }
+  button.primary, button.ghost { width: 100%; border-radius: 12px; font-family: inherit; font-size: 18px; cursor: pointer; }
+  button.primary { border: 0; background: #FF5722; color: #fff; font-weight: 700; padding: 16px; min-height: 56px; }
+  button.ghost { margin-top: 8px; border: 1px solid #D0D0D0; background: #fff; color: #5A5A5A; font-weight: 600; padding: 14px; min-height: 52px; font-size: 17px; }
+  .ok { display: none; margin: 10px 0 0; padding: 12px; border-radius: 10px; background: #FFF3EE; color: #FF5722; font-size: 16px; font-weight: 600; text-align: center; }
+  .out { display: none; margin-top: 10px; padding: 12px; background: #F2F2F2; border: 1px solid #D0D0D0; border-radius: 10px; font-family: ui-monospace, Menlo, monospace; font-size: 14px; white-space: pre-wrap; word-break: break-word; color: #3D3D3D; }
+
+  .photo-box {
+    margin-top: 8px; border: 1px dashed #D0D0D0; border-radius: 14px;
+    padding: 14px; background: #FAFAFA; text-align: center;
+  }
+  .photo-box.has-img { border-style: solid; border-color: #FF5722; background: #FFF3EE; }
+  #foto_preview {
+    display: none; width: 120px; height: 120px; object-fit: cover;
+    border-radius: 50%; margin: 0 auto 12px; border: 3px solid #FF5722;
+  }
+  #foto_preview.show { display: block; }
+  .photo-actions { display: flex; flex-direction: column; gap: 8px; }
+  .photo-actions label.file-btn {
+    display: block; width: 100%; border-radius: 12px; border: 1px solid #D0D0D0;
+    background: #fff; color: #5A5A5A; font-weight: 600; font-size: 17px;
+    padding: 14px; min-height: 52px; text-align: center; cursor: pointer;
+  }
+  .photo-actions input[type="file"] { display: none; }
+  #foto_clear {
+    display: none; width: 100%; border-radius: 12px; border: 0; background: transparent;
+    color: #FF5722; font-weight: 600; font-size: 15px; padding: 8px; font-family: inherit;
+  }
+  #foto_clear.show { display: block; }
+  #foto_status { font-size: 14px; color: #8A8A8A; margin: 8px 0 0; }
+  .slogan { margin: 14px 0 4px; text-align: center; color: #6B6B6B; font-size: 15px; font-weight: 500; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hero">
+    <img class="logo-h" width="180" height="42" src="/brand/01_Logo_Horizontal_Original.png" alt="Grupo Jet"/>
+    <p class="kicker">Grupo Jet · cadastro do time · web</p>
+    <div class="accent"></div>
+    <h1>Quem é quem</h1>
+    <p class="lede">Escolha o papel no campo abaixo. O formulário mostra só o que importa pro seu caso.</p>
+  </div>
+
+  <section class="block">
+    <h2 class="block-title">Você</h2>
+    <label class="field" for="nome">1. Nome completo <span class="req">*</span></label>
+    <input id="nome" autocomplete="name" placeholder="Nome e sobrenome"/>
+    <label class="field" for="wa">2. WhatsApp <span class="req">*</span></label>
+    <input id="wa" inputmode="tel" autocomplete="tel" placeholder="62 9XXXX-XXXX"/>
+    <p class="hint">O número que você usa no dia a dia.</p>
+  </section>
+
+  <section class="block">
+    <h2 class="block-title">Foto</h2>
+    <p class="block-help">Rosto pra o time se conhecer. Pode tirar agora ou escolher da galeria.</p>
+    <div class="photo-box" id="photo_box">
+      <img id="foto_preview" alt="Prévia da foto"/>
+      <div class="photo-actions">
+        <label class="file-btn" for="foto_camera">Tirar foto (câmera)</label>
+        <input id="foto_camera" type="file" accept="image/*" capture="user"/>
+        <label class="file-btn" for="foto_galeria">Escolher da galeria</label>
+        <input id="foto_galeria" type="file" accept="image/*"/>
+        <button type="button" id="foto_clear">Remover foto</button>
+      </div>
+      <p id="foto_status">Opcional agora — recomendado.</p>
+    </div>
+  </section>
+
+  <section class="block">
+    <h2 class="block-title">Papel</h2>
+    <p class="block-help">Abra o campo e escolha uma opção (roda do iPhone).</p>
+    <label class="field" for="papel">3. Qual é o seu papel? <span class="req">*</span></label>
+    <select id="papel">
+      <option value="">Toque para escolher…</option>
+      <option value="socio">Sócio</option>
+      <option value="tecnico">Técnico de campo</option>
+      <option value="noc">NOC / Operações</option>
+      <option value="projetos">Projetos</option>
+      <option value="financeiro">Financeiro</option>
+      <option value="comercial">Comercial</option>
+      <option value="rh">RH / Admin</option>
+      <option value="ti">TI / Sistemas</option>
+      <option value="coordenacao">Coordenação / Gestão</option>
+      <option value="outro">Outro</option>
+    </select>
+    <div id="papel_outro_wrap" class="hidden">
+      <label class="field" for="papel_outro">Descreva o papel <span class="req">*</span></label>
+      <input id="papel_outro" placeholder="Ex.: frota, compras, jurídico…"/>
+    </div>
+  </section>
+
+  <section class="block hidden" id="blk_detalhes">
+    <h2 class="block-title">Detalhes</h2>
+    <p class="block-help" id="detalhes_help">Só o necessário pro seu papel.</p>
+
+    <div id="wrap_atividades" class="hidden">
+      <label class="field">O que você faz (marque o que couber)</label>
+      <div class="check-list" id="atividades">
+        <label class="check hidden" data-for="noc coordenacao"><input type="checkbox" value="Atendimento NOC"/> Atendimento NOC</label>
+        <label class="check hidden" data-for="tecnico coordenacao"><input type="checkbox" value="Campo / instalação"/> Campo / instalação</label>
+        <label class="check hidden" data-for="tecnico coordenacao"><input type="checkbox" value="Fibra / emenda"/> Fibra / emenda</label>
+        <label class="check hidden" data-for="projetos coordenacao"><input type="checkbox" value="Projetos / PPI"/> Projetos / PPI</label>
+        <label class="check hidden" data-for="financeiro coordenacao"><input type="checkbox" value="Financeiro / pagamentos"/> Financeiro / pagamentos</label>
+        <label class="check hidden" data-for="comercial coordenacao"><input type="checkbox" value="Comercial / propostas"/> Comercial / propostas</label>
+        <label class="check hidden" data-for="rh coordenacao"><input type="checkbox" value="RH / cadastro"/> RH / cadastro</label>
+        <label class="check hidden" data-for="rh coordenacao outro"><input type="checkbox" value="Frota / veículos"/> Frota / veículos</label>
+        <label class="check hidden" data-for="financeiro rh coordenacao outro"><input type="checkbox" value="Compras / fornecedores"/> Compras / fornecedores</label>
+        <label class="check hidden" data-for="coordenacao"><input type="checkbox" value="Gestão de equipe"/> Gestão de equipe</label>
+        <label class="check hidden" data-for="ti coordenacao"><input type="checkbox" value="TI / sistemas"/> TI / sistemas</label>
+      </div>
+    </div>
+
+    <div id="wrap_vinculo" class="hidden">
+      <label class="field" for="vinculo">Vínculo <span class="req">*</span></label>
+      <select id="vinculo">
+        <option value="">Toque para escolher…</option>
+        <option value="CLT">CLT</option>
+        <option value="PJ">PJ</option>
+        <option value="Estágio">Estágio</option>
+        <option value="Outro">Outro</option>
+      </select>
+    </div>
+
+    <label class="field" for="cidade">Cidade base <span class="req">*</span></label>
+    <input id="cidade" placeholder="Ex.: Goiânia"/>
+
+    <div id="wrap_gestor" class="hidden">
+      <label class="field" for="gestor">Gestor / quem aprova (opcional)</label>
+      <input id="gestor" placeholder="Nome de quem aprova no seu setor"/>
+    </div>
+
+    <label class="field" for="obs">Observação (opcional)</label>
+    <textarea id="obs" placeholder="Turno, equipe, base — só se ajudar"></textarea>
+  </section>
+
+  <div class="actions">
+    <button class="primary" type="button" id="btnWa">Enviar no WhatsApp</button>
+    <button class="ghost" type="button" id="btnCopy">Copiar resumo</button>
+    <button class="ghost" type="button" id="btnLink">Abrir link do WhatsApp</button>
+    <button class="ghost" type="button" id="btnJson">Baixar meu cadastro</button>
+    <p class="ok" id="ok">Abrindo o WhatsApp com seu cadastro…</p>
+    <div class="out" id="out"></div>
+    <p class="slogan">Conectar é só o começo.</p>
+  </div>
+</div>
+<script>
+(function () {
+  var m = document.querySelector('meta[name="viewport"]');
+  if (m) m.setAttribute('content', 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no, viewport-fit=cover');
+})();
+(function(){
+  var papelEl = document.getElementById('papel');
+  var blk = document.getElementById('blk_detalhes');
+  var wrapAtiv = document.getElementById('wrap_atividades');
+  var wrapVinc = document.getElementById('wrap_vinculo');
+  var wrapGest = document.getElementById('wrap_gestor');
+  var outroWrap = document.getElementById('papel_outro_wrap');
+  var help = document.getElementById('detalhes_help');
+  var vinculoEl = document.getElementById('vinculo');
+
+  var LABELS = {
+    socio: 'Sócio',
+    tecnico: 'Técnico de campo',
+    noc: 'NOC / Operações',
+    projetos: 'Projetos',
+    financeiro: 'Financeiro',
+    comercial: 'Comercial',
+    rh: 'RH / Admin',
+    ti: 'TI / Sistemas',
+    coordenacao: 'Coordenação / Gestão',
+    outro: 'Outro'
+  };
+
+  function applyPapel(){
+    var key = papelEl.value;
+    if (!key) {
+      blk.classList.add('hidden');
+      outroWrap.classList.add('hidden');
+      return;
+    }
+    blk.classList.remove('hidden');
+    outroWrap.classList.toggle('hidden', key !== 'outro');
+
+    document.querySelectorAll('#atividades .check').forEach(function(row){
+      var tags = (row.getAttribute('data-for') || '').split(/\s+/);
+      var show = tags.indexOf(key) >= 0;
+      row.classList.toggle('hidden', !show);
+      if (!show) {
+        var inp = row.querySelector('input');
+        if (inp) inp.checked = false;
+      }
+    });
+
+    if (key === 'socio') {
+      help.textContent = 'Sócio: só o essencial.';
+      wrapAtiv.classList.add('hidden');
+      wrapVinc.classList.add('hidden');
+      wrapGest.classList.add('hidden');
+      vinculoEl.value = '';
+    } else {
+      help.textContent = 'Só opções do seu papel.';
+      wrapAtiv.classList.remove('hidden');
+      wrapVinc.classList.remove('hidden');
+      wrapGest.classList.remove('hidden');
+    }
+  }
+  papelEl.addEventListener('change', applyPapel);
+
+
+  var fotoDataUrl = '';
+  var fotoNome = '';
+  var fotoMime = '';
+  function setFoto(file){
+    if (!file) return;
+    if (!file.type || file.type.indexOf('image/') !== 0) {
+      document.getElementById('foto_status').textContent = 'Escolha uma imagem (foto).';
+      return;
+    }
+    // compress for WhatsApp/JSON size
+    var reader = new FileReader();
+    reader.onload = function(){
+      var img = new Image();
+      img.onload = function(){
+        var max = 720;
+        var w = img.width, h = img.height;
+        if (w > max || h > max) {
+          if (w >= h) { h = Math.round(h * max / w); w = max; }
+          else { w = Math.round(w * max / h); h = max; }
+        }
+        var canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        var ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, w, h);
+        fotoDataUrl = canvas.toDataURL('image/jpeg', 0.82);
+        fotoMime = 'image/jpeg';
+        fotoNome = (file.name || 'foto-cadastro').replace(/\.[^.]+$/, '') + '.jpg';
+        var prev = document.getElementById('foto_preview');
+        prev.src = fotoDataUrl;
+        prev.classList.add('show');
+        document.getElementById('photo_box').classList.add('has-img');
+        document.getElementById('foto_clear').classList.add('show');
+        var kb = Math.round((fotoDataUrl.length * 0.75) / 1024);
+        document.getElementById('foto_status').textContent = 'Foto pronta (~' + kb + ' KB). Vai no cadastro.';
+      };
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  }
+  function clearFoto(){
+    fotoDataUrl = ''; fotoNome = ''; fotoMime = '';
+    document.getElementById('foto_camera').value = '';
+    document.getElementById('foto_galeria').value = '';
+    var prev = document.getElementById('foto_preview');
+    prev.removeAttribute('src'); prev.classList.remove('show');
+    document.getElementById('photo_box').classList.remove('has-img');
+    document.getElementById('foto_clear').classList.remove('show');
+    document.getElementById('foto_status').textContent = 'Opcional agora — recomendado.';
+  }
+  document.getElementById('foto_camera').addEventListener('change', function(){ setFoto(this.files && this.files[0]); });
+  document.getElementById('foto_galeria').addEventListener('change', function(){ setFoto(this.files && this.files[0]); });
+  document.getElementById('foto_clear').addEventListener('click', clearFoto);
+
+  function dados(){
+    var key = papelEl.value;
+    var papelLabel = '';
+    if (key === 'outro') papelLabel = document.getElementById('papel_outro').value.trim() || 'Outro';
+    else if (key) papelLabel = LABELS[key] || key;
+    var atividades = Array.prototype.map.call(
+      document.querySelectorAll('#atividades .check:not(.hidden) input:checked'),
+      function(i){ return i.value; }
+    );
+    var vinculo = (key === 'socio') ? 'Sócio' : vinculoEl.value;
+    return {
+      tipo: 'cadastro_time_jota',
+      versao: 'web',
+      nome: document.getElementById('nome').value.trim(),
+      whatsapp: document.getElementById('wa').value.trim(),
+      papel: papelLabel,
+      papel_key: key,
+      setor: papelLabel,
+      funcao: papelLabel,
+      atividades: atividades,
+      cidade: document.getElementById('cidade').value.trim(),
+      vinculo: vinculo,
+      gestor: document.getElementById('gestor').value.trim(),
+      obs: document.getElementById('obs').value.trim(),
+      foto: fotoDataUrl ? { nome: fotoNome, mimetype: fotoMime, dataUrl: fotoDataUrl } : null
+    };
+  }
+  function resumo(p){
+    var faltando = [];
+    if (!p.nome) faltando.push('nome');
+    if (!p.whatsapp) faltando.push('whatsapp');
+    if (!p.papel) faltando.push('papel');
+    if (p.papel_key === 'outro' && !document.getElementById('papel_outro').value.trim()) faltando.push('descrição do papel');
+    if (!p.cidade) faltando.push('cidade');
+    if (p.papel_key !== 'socio' && !p.vinculo) faltando.push('vínculo');
+    if (faltando.length) return 'Falta preencher: ' + faltando.join(', ');
+    var lines = [
+      'CADASTRO DO TIME — GRUPO JET',
+      'Nome: ' + p.nome,
+      'WhatsApp: ' + p.whatsapp,
+      'Papel: ' + p.papel,
+      'Cidade: ' + p.cidade,
+      'Vínculo: ' + p.vinculo
+    ];
+    if (p.papel_key !== 'socio') {
+      lines.splice(4, 0, 'Atividades: ' + (p.atividades.length ? p.atividades.join('; ') : '-'));
+      lines.push('Gestor: ' + (p.gestor || '-'));
+    }
+    lines.push('Foto: ' + (p.foto ? 'sim (' + p.foto.nome + ')' : 'não'));
+    lines.push('Obs: ' + (p.obs || '-'));
+    return lines.join('\n');
+  }
+  var JOTA_WA = '5508006483496';
+  function showOut(texto, okMsg){
+    var out = document.getElementById('out');
+    var ok = document.getElementById('ok');
+    out.style.display = 'block';
+    out.textContent = texto;
+    if (texto.indexOf('Falta preencher') === 0) { ok.style.display = 'none'; return false; }
+    if (okMsg) { ok.textContent = okMsg; ok.style.display = 'block'; }
+    return true;
+  }
+  function openWhatsApp(texto){
+    // Keep payload SHORT — iOS Safari / WA WebView choke on long query strings.
+    // Never put photo base64 in the URL.
+    var encoded = encodeURIComponent(texto);
+    if (encoded.length > 1800) {
+      // trim obs/atividades if somehow huge
+      texto = texto.split('\n').filter(function(line){
+        return line.indexOf('Obs:') !== 0;
+      }).join('\n');
+      encoded = encodeURIComponent(texto);
+    }
+    var httpsUrl = 'https://wa.me/' + JOTA_WA + '?text=' + encoded;
+    var schemeUrl = 'whatsapp://send?phone=' + JOTA_WA + '&text=' + encoded;
+    // Prefer native scheme on iPhone; fall back to https
+    var isiOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    var url = isiOS ? schemeUrl : httpsUrl;
+    try {
+      // Same-tab navigation is more reliable than synthetic <a click> inside WA/Files WebView
+      window.location.href = url;
+    } catch (e1) {
+      try { window.open(httpsUrl, '_blank'); } catch (e2) {}
+    }
+    // Also expose https link as visible fallback
+    var out = document.getElementById('out');
+    out.style.display = 'block';
+    out.textContent = texto + '\n\n---\nSe o Zap não abriu, toque no link:\n' + httpsUrl;
+    return httpsUrl;
+  }
+  document.getElementById('btnWa').onclick = function(){
+    var p = dados();
+    var texto = resumo(p);
+    if (!showOut(texto, 'Abrindo o WhatsApp…')) return;
+    openWhatsApp(texto);
+    var ok = document.getElementById('ok');
+    ok.style.display = 'block';
+    if (fotoDataUrl) {
+      ok.textContent = 'Zap com o texto. A foto NÃO vai no link (limite do iPhone) — use “Copiar resumo”, cole no J, e mande a foto em seguida no chat. Ou “Baixar meu cadastro”.';
+      // Auto-copy text to help
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(texto).catch(function(){});
+      }
+    } else {
+      ok.textContent = 'Se o Zap não abriu: Copiar resumo → cole no JOTA 0800. Ou toque no link que apareceu abaixo.';
+    }
+  };
+  document.getElementById('btnLink').onclick = function(){
+    var texto = resumo(dados());
+    if (!showOut(texto)) return;
+    var httpsUrl = 'https://wa.me/' + JOTA_WA + '?text=' + encodeURIComponent(texto);
+    window.location.href = httpsUrl;
+  };
+  document.getElementById('btnCopy').onclick = async function(){
+    var texto = resumo(dados());
+    if (!showOut(texto)) return;
+    try {
+      await navigator.clipboard.writeText(texto);
+      document.getElementById('ok').textContent = 'Copiado.';
+      document.getElementById('ok').style.display = 'block';
+    } catch (e) {
+      document.getElementById('ok').textContent = 'Não deu pra copiar. Use Enviar no WhatsApp.';
+      document.getElementById('ok').style.display = 'block';
+    }
+  };
+  document.getElementById('btnJson').onclick = function(){
+    var p = dados();
+    var blob = new Blob([JSON.stringify(p, null, 2)], {type:'application/json'});
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'cadastro-time-grupo-jet.json';
+    a.click();
+  };
+})();
+</script>
+</body>
+</html>
