@@ -1,0 +1,155 @@
+type="file" accept="image/*" capture="user"/>
+        <label class="file-btn" for="foto_galeria">Escolher da galeria</label>
+        <input id="foto_galeria" type="file" accept="image/*"/>
+        <button type="button" id="foto_clear">Remover foto</button>
+      </div>
+      <p id="foto_status">Opcional agora — recomendado.</p>
+    </div>
+  </section>
+
+  <section class="block">
+    <h2 class="block-title">Papel</h2>
+    <p class="block-help">Abra o campo e escolha uma opção (roda do iPhone).</p>
+    <label class="field" for="papel">3. Qual é o seu papel? <span class="req">*</span></label>
+    <select id="papel">
+      <option value="">Toque para escolher…</option>
+      <option value="socio">Sócio</option>
+      <option value="tecnico">Técnico de campo</option>
+      <option value="noc">NOC / Operações</option>
+      <option value="projetos">Projetos</option>
+      <option value="financeiro">Financeiro</option>
+      <option value="comercial">Comercial</option>
+      <option value="rh">RH / Admin</option>
+      <option value="ti">TI / Sistemas</option>
+      <option value="coordenacao">Coordenação / Gestão</option>
+      <option value="outro">Outro</option>
+    </select>
+    <div id="papel_outro_wrap" class="hidden">
+      <label class="field" for="papel_outro">Descreva o papel <span class="req">*</span></label>
+      <input id="papel_outro" placeholder="Ex.: frota, compras, jurídico…"/>
+    </div>
+  </section>
+
+  <section class="block hidden" id="blk_detalhes">
+    <h2 class="block-title">Detalhes</h2>
+    <p class="block-help" id="detalhes_help">Só o necessário pro seu papel.</p>
+
+    <div id="wrap_atividades" class="hidden">
+      <label class="field">O que você faz (marque o que couber)</label>
+      <div class="check-list" id="atividades">
+        <label class="check hidden" data-for="noc coordenacao"><input type="checkbox" value="Atendimento NOC"/> Atendimento NOC</label>
+        <label class="check hidden" data-for="tecnico coordenacao"><input type="checkbox" value="Campo / instalação"/> Campo / instalação</label>
+        <label class="check hidden" data-for="tecnico coordenacao"><input type="checkbox" value="Fibra / emenda"/> Fibra / emenda</label>
+        <label class="check hidden" data-for="projetos coordenacao"><input type="checkbox" value="Projetos / PPI"/> Projetos / PPI</label>
+        <label class="check hidden" data-for="financeiro coordenacao"><input type="checkbox" value="Financeiro / pagamentos"/> Financeiro / pagamentos</label>
+        <label class="check hidden" data-for="comercial coordenacao"><input type="checkbox" value="Comercial / propostas"/> Comercial / propostas</label>
+        <label class="check hidden" data-for="rh coordenacao"><input type="checkbox" value="RH / cadastro"/> RH / cadastro</label>
+        <label class="check hidden" data-for="rh coordenacao outro"><input type="checkbox" value="Frota / veículos"/> Frota / veículos</label>
+        <label class="check hidden" data-for="financeiro rh coordenacao outro"><input type="checkbox" value="Compras / fornecedores"/> Compras / fornecedores</label>
+        <label class="check hidden" data-for="coordenacao"><input type="checkbox" value="Gestão de equipe"/> Gestão de equipe</label>
+        <label class="check hidden" data-for="ti coordenacao"><input type="checkbox" value="TI / sistemas"/> TI / sistemas</label>
+      </div>
+    </div>
+
+    <div id="wrap_vinculo" class="hidden">
+      <label class="field" for="vinculo">Vínculo <span class="req">*</span></label>
+      <select id="vinculo">
+        <option value="">Toque para escolher…</option>
+        <option value="CLT">CLT</option>
+        <option value="PJ">PJ</option>
+        <option value="Estágio">Estágio</option>
+        <option value="Outro">Outro</option>
+      </select>
+    </div>
+
+    <label class="field" for="cidade">Cidade base <span class="req">*</span></label>
+    <input id="cidade" placeholder="Ex.: Goiânia"/>
+
+    <div id="wrap_gestor" class="hidden">
+      <label class="field" for="gestor">Gestor / quem aprova (opcional)</label>
+      <input id="gestor" placeholder="Nome de quem aprova no seu setor"/>
+    </div>
+
+    <label class="field" for="obs">Observação (opcional)</label>
+    <textarea id="obs" placeholder="Turno, equipe, base — só se ajudar"></textarea>
+  </section>
+
+  <div class="actions">
+    <button class="primary" type="button" id="btnWa">Enviar no WhatsApp</button>
+    <button class="ghost" type="button" id="btnCopy">Copiar resumo</button>
+    <button class="ghost" type="button" id="btnLink">Abrir link do WhatsApp</button>
+    <button class="ghost" type="button" id="btnJson">Baixar meu cadastro</button>
+    <p class="ok" id="ok">Abrindo o WhatsApp com seu cadastro…</p>
+    <div class="out" id="out"></div>
+    <p class="slogan">Conectar é só o começo.</p>
+  </div>
+</div>
+<script>
+(function () {
+  var m = document.querySelector('meta[name="viewport"]');
+  if (m) m.setAttribute('content', 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no, viewport-fit=cover');
+})();
+(function(){
+  var papelEl = document.getElementById('papel');
+  var blk = document.getElementById('blk_detalhes');
+  var wrapAtiv = document.getElementById('wrap_atividades');
+  var wrapVinc = document.getElementById('wrap_vinculo');
+  var wrapGest = document.getElementById('wrap_gestor');
+  var outroWrap = document.getElementById('papel_outro_wrap');
+  var help = document.getElementById('detalhes_help');
+  var vinculoEl = document.getElementById('vinculo');
+
+  var LABELS = {
+    socio: 'Sócio',
+    tecnico: 'Técnico de campo',
+    noc: 'NOC / Operações',
+    projetos: 'Projetos',
+    financeiro: 'Financeiro',
+    comercial: 'Comercial',
+    rh: 'RH / Admin',
+    ti: 'TI / Sistemas',
+    coordenacao: 'Coordenação / Gestão',
+    outro: 'Outro'
+  };
+
+  function applyPapel(){
+    var key = papelEl.value;
+    if (!key) {
+      blk.classList.add('hidden');
+      outroWrap.classList.add('hidden');
+      return;
+    }
+    blk.classList.remove('hidden');
+    outroWrap.classList.toggle('hidden', key !== 'outro');
+
+    document.querySelectorAll('#atividades .check').forEach(function(row){
+      var tags = (row.getAttribute('data-for') || '').split(/\s+/);
+      var show = tags.indexOf(key) >= 0;
+      row.classList.toggle('hidden', !show);
+      if (!show) {
+        var inp = row.querySelector('input');
+        if (inp) inp.checked = false;
+      }
+    });
+
+    if (key === 'socio') {
+      help.textContent = 'Sócio: só o essencial.';
+      wrapAtiv.classList.add('hidden');
+      wrapVinc.classList.add('hidden');
+      wrapGest.classList.add('hidden');
+      vinculoEl.value = '';
+    } else {
+      help.textContent = 'Só opções do seu papel.';
+      wrapAtiv.classList.remove('hidden');
+      wrapVinc.classList.remove('hidden');
+      wrapGest.classList.remove('hidden');
+    }
+  }
+  papelEl.addEventListener('change', applyPapel);
+
+
+  var fotoDataUrl = '';
+  var fotoNome = '';
+  var fotoMime = '';
+  function setFoto(file){
+  
