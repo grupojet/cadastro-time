@@ -1,13 +1,4 @@
-s="field" for="cidade">Cidade base <span class="req">*</span></label>
-    <input id="cidade" placeholder="Ex.: Goiânia"/>
-
-    <div id="wrap_gestor" class="hidden">
-      <label class="field" for="gestor">Gestor / quem aprova (opcional)</label>
-      <input id="gestor" placeholder="Nome de quem aprova no seu setor"/>
-    </div>
-
-    <label class="field" for="obs">Observação (opcional)</label>
-    <textarea id="obs" placeholder="Turno, equipe, base — só se ajudar"></textarea>
+rea id="obs" placeholder="Turno, equipe, base — só se ajudar"></textarea>
   </section>
 
   <div class="actions">
@@ -134,4 +125,19 @@ s="field" for="cidade">Cidade base <span class="req">*</span></label>
   }
   document.getElementById('foto_camera').addEventListener('change', function(){ setFoto(this.files && this.files[0]); });
   document.getElementById('foto_galeria').addEventListener('change', function(){ setFoto(this.files && this.files[0]); });
-  document.getElementById('foto_clear').addEventList
+  document.getElementById('foto_clear').addEventListener('click', clearFoto);
+
+  function dados(){
+    var key = papelEl.value;
+    var papelLabel = '';
+    if (key === 'outro') papelLabel = document.getElementById('papel_outro').value.trim() || 'Outro';
+    else if (key) papelLabel = LABELS[key] || key;
+    var atividades = Array.prototype.map.call(
+      document.querySelectorAll('#atividades .check:not(.hidden) input:checked'),
+      function(i){ return i.value; }
+    );
+    var vinculo = (key === 'socio') ? 'Sócio' : vinculoEl.value;
+    return {
+      tipo: 'cadastro_time_jota',
+      versao: 'web',
+      nome: document.getElementById('nome').value
