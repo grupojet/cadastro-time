@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="74" viewBox="0 0 360 74" role="img" aria-label="Grupo Jet">
+  <rect width="360" height="74" fill="none"/>
+  <text x="0" y="48" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Arial,sans-serif" font-size="36" font-weight="700" fill="#5A5A5A">Grupo </text>
+  <text x="148" y="48" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Arial,sans-serif" font-size="36" font-weight="800" fill="#FF5722">Jet</text>
+  <rect x="0" y="58" width="40" height="4" rx="2" fill="#FF5722"/>
+</svg>
