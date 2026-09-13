@@ -1,4 +1,25 @@
-fotoNome, mimetype: fotoMime, dataUrl: fotoDataUrl } : null
+papelLabel = document.getElementById('papel_outro').value.trim() || 'Outro';
+    else if (key) papelLabel = LABELS[key] || key;
+    var atividades = Array.prototype.map.call(
+      document.querySelectorAll('#atividades .check:not(.hidden) input:checked'),
+      function(i){ return i.value; }
+    );
+    var vinculo = (key === 'socio') ? 'Sócio' : vinculoEl.value;
+    return {
+      tipo: 'cadastro_time_jota',
+      versao: 'web',
+      nome: document.getElementById('nome').value.trim(),
+      whatsapp: document.getElementById('wa').value.trim(),
+      papel: papelLabel,
+      papel_key: key,
+      setor: papelLabel,
+      funcao: papelLabel,
+      atividades: atividades,
+      cidade: document.getElementById('cidade').value.trim(),
+      vinculo: vinculo,
+      gestor: document.getElementById('gestor').value.trim(),
+      obs: document.getElementById('obs').value.trim(),
+      foto: fotoDataUrl ? { nome: fotoNome, mimetype: fotoMime, dataUrl: fotoDataUrl } : null
     };
   }
   function resumo(p){
@@ -26,49 +47,39 @@ fotoNome, mimetype: fotoMime, dataUrl: fotoDataUrl } : null
     lines.push('Obs: ' + (p.obs || '-'));
     return lines.join('\n');
   }
-  // Webhook da rotina "Cadastro time → JOTA" (cole a URL no form publish).
-  // Placeholder até o Ruan colar o Webhook URL da rotina.
-  var JOTA_CADASTRO_WEBHOOK = 'WEBHOOK_URL_PLACEHOLDER';
+  // Destino confiável no iPhone: e-mail (mailto) + FormSubmit.
+  // Webhook Grok ainda PLACEHOLDER; mailto não depende de preview/CORS.
+  var JOTA_CADASTRO_EMAIL = 'ruan.lobo@grupojet.com.br';
+  var FORMSUBMIT = 'https://formsubmit.co/ajax/' + JOTA_CADASTRO_EMAIL;
 
-  function abrirZapJ(texto) {
-    var JOTA_WA = '5508006483496';
-    var encoded = encodeURIComponent(texto);
-    if (encoded.length > 1800) {
-      texto = texto.split('\n').filter(function(line){ return line.indexOf('Obs:') !== 0; }).join('\n');
-      encoded = encodeURIComponent(texto);
-    }
-    var httpsUrl = 'https://wa.me/' + JOTA_WA + '?text=' + encoded;
+  function abrirEmailCadastro(texto, p) {
+    var subj = encodeURIComponent('Cadastro do time — ' + (p.nome || 'sem nome'));
+    var body = encodeURIComponent(texto);
+    var mailto = 'mailto:' + JOTA_CADASTRO_EMAIL + '?subject=' + subj + '&body=' + body;
     var out = document.getElementById('out');
     out.style.display = 'block';
-    out.innerHTML = '';
-    out.appendChild(document.createTextNode(texto + '\n\n---\nSe o Zap não abriu, toque:\n'));
+    out.textContent = texto;
+    var wrap = document.createElement('div');
+    wrap.style.marginTop = '12px';
     var a = document.createElement('a');
-    a.href = httpsUrl;
-    a.target = '_blank';
-    a.rel = 'noopener';
-    a.textContent = 'Abrir WhatsApp do J com meu cadastro';
-    a.style.cssText = 'display:block;margin-top:10px;color:#FF5722;font-weight:700;word-break:break-all;';
-    out.appendChild(a);
+    a.href = mailto;
+    a.textContent = 'Toque aqui se o e-mail não abriu';
+    a.style.cssText = 'display:block;color:#FF5722;font-weight:700;font-size:17px;';
+    wrap.appendChild(a);
+    out.appendChild(wrap);
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(texto).catch(function(){});
     }
-    // Prefer user-gesture navigation via synthetic anchor (works better than location in previews)
-    var go = document.createElement('a');
-    go.href = httpsUrl;
-    go.target = '_blank';
-    go.rel = 'noopener';
-    document.body.appendChild(go);
-    go.click();
-    go.remove();
-    return httpsUrl;
+    window.location.href = mailto;
   }
 
   async function enviarCadastro() {
     var p = dados();
     var texto = resumo(p);
     if (!showOut(texto)) {
-      document.getElementById('ok').style.display = 'block';
-      document.getElementById('ok').textContent = texto;
+      var ok0 = document.getElementById('ok');
+      ok0.style.display = 'block';
+      ok0.textContent = texto;
       return;
     }
     var btn = document.getElementById('btnSend');
@@ -77,56 +88,34 @@ fotoNome, mimetype: fotoMime, dataUrl: fotoDataUrl } : null
     ok.style.display = 'block';
     ok.textContent = 'Enviando…';
 
-    var body = {
+    var payload = {
       type: 'cadastro-time',
       source: 'cadastro-time-form',
-      payload: p,
+      _subject: 'Cadastro do time — ' + (p.nome || ''),
+      nome: p.nome,
+      whatsapp: p.whatsapp,
+      papel: p.papel,
+      cidade: p.cidade,
+      vinculo: p.vinculo,
+      gestor: p.gestor,
+      atividades: (p.atividades || []).join('; '),
+      obs: p.obs,
       resumo: texto,
       sentAt: new Date().toISOString()
     };
+
+    // 1) FormSubmit (e-mail) — best effort, may need 1st-time confirm
     try {
-      var prev = document.getElementById('foto_preview');
-      if (prev && prev.src && prev.src.indexOf('data:image') === 0 && prev.src.length < 180000) {
-        body.fotoDataUrl = prev.src;
-      } else if (prev && prev.src && prev.src.indexOf('data:image') === 0) {
-        body.fotoOmitida = 'foto grande demais pro webhook; cadastro segue sem binário';
-      }
+      await fetch(FORMSUBMIT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(payload)
+      });
     } catch (e) {}
 
-    if (!JOTA_CADASTRO_WEBHOOK || JOTA_CADASTRO_WEBHOOK.indexOf('PLACEHOLDER') >= 0) {
-      ok.textContent = 'Abrindo WhatsApp do J… Se não abrir, toque no link laranja abaixo (resumo já copiado).';
-      abrirZapJ(texto);
-      btn.disabled = false;
-      return;
-    }
-
-    try {
-      var r = await fetch(JOTA_CADASTRO_WEBHOOK, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-        mode: 'cors',
-        keepalive: true
-      });
-      if (!r.ok) throw new Error('HTTP ' + r.status);
-      ok.textContent = 'Enviado pro JOTA. Valeu — dados salvos no repositório.';
-    } catch (e) {
-      try {
-        await fetch(JOTA_CADASTRO_WEBHOOK, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain' },
-          body: JSON.stringify(body),
-          mode: 'no-cors',
-          keepalive: true
-        });
-        ok.textContent = 'Envio disparado pro JOTA. Se em 1 min não confirmar no chat, avisa o Ruan.';
-      } catch (e2) {
-        ok.textContent = 'Webhook falhou — abrindo Zap do J com o resumo.';
-        abrirZapJ(texto);
-        btn.disabled = false;
-        return;
-      }
-    }
+    // 2) mailto — reliable on iPhone Safari
+    ok.textContent = 'Abrindo seu e-mail com o cadastro… toque Enviar no Mail. Resumo também copiado.';
+    abrirEmailCadastro(texto, p);
     btn.disabled = false;
   }
 
