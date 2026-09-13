@@ -1,6 +1,4 @@
-pe="file"] { display: none; }
-  #foto_clear {
-    display: none; width: 100%; border-radius: 12px; border: 0; background: transparent;
+; background: transparent;
     color: #FF5722; font-weight: 600; font-size: 15px; padding: 8px; font-family: inherit;
   }
   #foto_clear.show { display: block; }
@@ -88,4 +86,9 @@ pe="file"] { display: none; }
     </div>
 
     <div id="wrap_vinculo" class="hidden">
-      <label class="field" for="vinculo">Vín
+      <label class="field" for="vinculo">Vínculo <span class="req">*</span></label>
+      <select id="vinculo">
+        <option value="">Toque para escolher…</option>
+        <option value="CLT">CLT</option>
+        <option value="PJ">PJ</option>
+        <opti
