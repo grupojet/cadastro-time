@@ -1,4 +1,5 @@
-"cidade" placeholder="Ex.: Goiânia"/>
+ade base <span class="req">*</span></label>
+    <input id="cidade" placeholder="Ex.: Goiânia"/>
 
     <div id="wrap_gestor" class="hidden">
       <label class="field" for="gestor">Gestor / quem aprova (opcional)</label>
@@ -135,7 +136,4 @@
   document.getElementById('foto_galeria').addEventListener('change', function(){ setFoto(this.files && this.files[0]); });
   document.getElementById('foto_clear').addEventListener('click', clearFoto);
 
-  function dados(){
-    var key = papelEl.value;
-    var papelLabel = '';
-    if (key === 'outro') 
+  function d
