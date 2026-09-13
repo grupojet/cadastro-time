@@ -1,4 +1,18 @@
-e="button" id="btnJson">Baixar meu cadastro</button>
+"cidade" placeholder="Ex.: Goiânia"/>
+
+    <div id="wrap_gestor" class="hidden">
+      <label class="field" for="gestor">Gestor / quem aprova (opcional)</label>
+      <input id="gestor" placeholder="Nome de quem aprova no seu setor"/>
+    </div>
+
+    <label class="field" for="obs">Observação (opcional)</label>
+    <textarea id="obs" placeholder="Turno, equipe, base — só se ajudar"></textarea>
+  </section>
+
+  <div class="actions">
+    <button class="primary" type="button" id="btnSend">Enviar dados</button>
+    <button class="ghost" type="button" id="btnCopy">Copiar resumo</button>
+<button class="ghost" type="button" id="btnJson">Baixar meu cadastro</button>
     <p class="ok" id="ok">Toque em Enviar dados pra mandar pro JOTA.</p>
     <div class="out" id="out"></div>
     <p class="slogan">Conectar é só o começo.</p>
@@ -124,25 +138,4 @@ e="button" id="btnJson">Baixar meu cadastro</button>
   function dados(){
     var key = papelEl.value;
     var papelLabel = '';
-    if (key === 'outro') papelLabel = document.getElementById('papel_outro').value.trim() || 'Outro';
-    else if (key) papelLabel = LABELS[key] || key;
-    var atividades = Array.prototype.map.call(
-      document.querySelectorAll('#atividades .check:not(.hidden) input:checked'),
-      function(i){ return i.value; }
-    );
-    var vinculo = (key === 'socio') ? 'Sócio' : vinculoEl.value;
-    return {
-      tipo: 'cadastro_time_jota',
-      versao: 'web',
-      nome: document.getElementById('nome').value.trim(),
-      whatsapp: document.getElementById('wa').value.trim(),
-      papel: papelLabel,
-      papel_key: key,
-      setor: papelLabel,
-      funcao: papelLabel,
-      atividades: atividades,
-      cidade: document.getElementById('cidade').value.trim(),
-      vinculo: vinculo,
-      gestor: document.getElementById('gestor').value.trim(),
-      obs: document.getElementById('obs').value.trim(),
-      foto: fotoDataUrl ? { nome: 
+    if (key === 'outro') 
