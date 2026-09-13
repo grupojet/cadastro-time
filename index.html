@@ -5,10 +5,10 @@
 <title>Cadastro do time | Grupo Jet</title>
 <style>body{margin:0;font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#E8E8E8;color:#5A5A5A;padding:24px;text-align:center}</style>
 </head><body>
-<p>Carregando cadastro do time…</p>
+<p>Carregando…</p>
 <script>
 (async function(){
-  var n=4, parts=[], base='https://cdn.jsdelivr.net/gh/grupojet/cadastro-time@37179968ab673aed22183fd56d1a2ad68b9658d3/';
+  var n=4, parts=[], base='https://cdn.jsdelivr.net/gh/grupojet/cadastro-time@a98956e34ebc765e49fc1227aefb07e3bc98cea1/';
   try {
     for (var i=0;i<n;i++){
       var r=await fetch(base+'part'+i+'.txt',{cache:'no-store'});
@@ -17,7 +17,7 @@
     }
     document.open(); document.write(parts.join('')); document.close();
   } catch(e) {
-    document.body.innerHTML='<p style="color:#FF5722;font-weight:700">Falha ao carregar.</p><p>'+e+'</p>';
+    document.body.innerHTML='<p style="color:#FF5722">Falha: '+e+'</p>';
   }
 })();
 </script>
