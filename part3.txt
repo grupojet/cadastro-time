@@ -1,4 +1,130 @@
-ry {
+).addEventListener('click', clearFoto);
+
+  function dados(){
+    var key = papelEl.value;
+    var papelLabel = '';
+    if (key === 'outro') papelLabel = document.getElementById('papel_outro').value.trim() || 'Outro';
+    else if (key) papelLabel = LABELS[key] || key;
+    var atividades = Array.prototype.map.call(
+      document.querySelectorAll('#atividades .check:not(.hidden) input:checked'),
+      function(i){ return i.value; }
+    );
+    var vinculo = (key === 'socio') ? 'Sócio' : vinculoEl.value;
+    return {
+      tipo: 'cadastro_time_jota',
+      versao: 'web',
+      nome: document.getElementById('nome').value.trim(),
+      whatsapp: document.getElementById('wa').value.trim(),
+      papel: papelLabel,
+      papel_key: key,
+      setor: papelLabel,
+      funcao: papelLabel,
+      atividades: atividades,
+      cidade: document.getElementById('cidade').value.trim(),
+      vinculo: vinculo,
+      gestor: document.getElementById('gestor').value.trim(),
+      obs: document.getElementById('obs').value.trim(),
+      foto: fotoDataUrl ? { nome: fotoNome, mimetype: fotoMime, dataUrl: fotoDataUrl } : null
+    };
+  }
+  function resumo(p){
+    var faltando = [];
+    if (!p.nome) faltando.push('nome');
+    if (!p.whatsapp) faltando.push('whatsapp');
+    if (!p.papel) faltando.push('papel');
+    if (p.papel_key === 'outro' && !document.getElementById('papel_outro').value.trim()) faltando.push('descrição do papel');
+    if (!p.cidade) faltando.push('cidade');
+    if (p.papel_key !== 'socio' && !p.vinculo) faltando.push('vínculo');
+    if (faltando.length) return 'Falta preencher: ' + faltando.join(', ');
+    var lines = [
+      'CADASTRO DO TIME — GRUPO JET',
+      'Nome: ' + p.nome,
+      'WhatsApp: ' + p.whatsapp,
+      'Papel: ' + p.papel,
+      'Cidade: ' + p.cidade,
+      'Vínculo: ' + p.vinculo
+    ];
+    if (p.papel_key !== 'socio') {
+      lines.splice(4, 0, 'Atividades: ' + (p.atividades.length ? p.atividades.join('; ') : '-'));
+      lines.push('Gestor: ' + (p.gestor || '-'));
+    }
+    lines.push('Foto: ' + (p.foto ? 'sim (' + p.foto.nome + ')' : 'não'));
+    lines.push('Obs: ' + (p.obs || '-'));
+    return lines.join('\n');
+  }
+  // Webhook da rotina "Cadastro time → JOTA" (cole a URL no form publish).
+  // Placeholder até o Ruan colar o Webhook URL da rotina.
+  var JOTA_CADASTRO_WEBHOOK = 'WEBHOOK_URL_PLACEHOLDER';
+
+  async function enviarCadastro() {
+    var p = dados();
+    var texto = resumo(p);
+    if (!showOut(texto)) return;
+    var btn = document.getElementById('btnSend');
+    var ok = document.getElementById('ok');
+    btn.disabled = true;
+    ok.style.display = 'block';
+    ok.textContent = 'Enviando pro JOTA…';
+
+    var body = {
+      type: 'cadastro-time',
+      source: 'cadastro-time-form',
+      payload: p,
+      resumo: texto,
+      sentAt: new Date().toISOString()
+    };
+    // foto: only send if small enough for webhook (< ~200kb data url)
+    try {
+      var prev = document.getElementById('foto_preview');
+      if (prev && prev.src && prev.src.indexOf('data:image') === 0 && prev.src.length < 180000) {
+        body.fotoDataUrl = prev.src;
+      } else if (prev && prev.src && prev.src.indexOf('data:image') === 0) {
+        body.fotoOmitida = 'foto grande demais pro webhook; cadastro segue sem binário';
+      }
+    } catch (e) {}
+
+    if (!JOTA_CADASTRO_WEBHOOK || JOTA_CADASTRO_WEBHOOK.indexOf('PLACEHOLDER') >= 0) {
+      ok.textContent = 'Webhook do JOTA ainda não configurado. Avisa o Ruan/JOTA.';
+      btn.disabled = false;
+      return;
+    }
+
+    try {
+      var r = await fetch(JOTA_CADASTRO_WEBHOOK, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+        mode: 'cors',
+        keepalive: true
+      });
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      ok.textContent = 'Enviado pro JOTA. Valeu — dados salvos no repositório.';
+    } catch (e) {
+      // Fallback: no-cors opaque POST (browser can't read response)
+      try {
+        await fetch(JOTA_CADASTRO_WEBHOOK, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain' },
+          body: JSON.stringify(body),
+          mode: 'no-cors',
+          keepalive: true
+        });
+        ok.textContent = 'Envio disparado pro JOTA. Se em 1 min não confirmar no chat, avisa o Ruan.';
+      } catch (e2) {
+        ok.textContent = 'Falhou o envio. ' + String(e2);
+        btn.disabled = false;
+        return;
+      }
+    }
+    btn.disabled = false;
+  }
+
+  document.getElementById('btnSend').onclick = function(){ enviarCadastro(); };
+
+  document.getElementById('btnCopy').onclick = async function(){
+    var texto = resumo(dados());
+    if (!showOut(texto)) return;
+    try {
       await navigator.clipboard.writeText(texto);
       document.getElementById('ok').textContent = 'Copiado.';
       document.getElementById('ok').style.display = 'block';
