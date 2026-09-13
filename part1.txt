@@ -1,4 +1,7 @@
- 15px; padding: 8px; font-family: inherit;
+pe="file"] { display: none; }
+  #foto_clear {
+    display: none; width: 100%; border-radius: 12px; border: 0; background: transparent;
+    color: #FF5722; font-weight: 600; font-size: 15px; padding: 8px; font-family: inherit;
   }
   #foto_clear.show { display: block; }
   #foto_status { font-size: 14px; color: #8A8A8A; margin: 8px 0 0; }
@@ -85,14 +88,4 @@
     </div>
 
     <div id="wrap_vinculo" class="hidden">
-      <label class="field" for="vinculo">Vínculo <span class="req">*</span></label>
-      <select id="vinculo">
-        <option value="">Toque para escolher…</option>
-        <option value="CLT">CLT</option>
-        <option value="PJ">PJ</option>
-        <option value="Estágio">Estágio</option>
-        <option value="Outro">Outro</option>
-      </select>
-    </div>
-
-    <label class="field" for="cidade">Cid
+      <label class="field" for="vinculo">Vín
