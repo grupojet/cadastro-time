@@ -96,27 +96,4 @@
 <body>
 <div class="wrap">
   <div class="hero">
-    <img class="logo-h" width="180" height="42" src="https://portal.grupojet.com.br/brand/01_Logo_Horizontal_Original.png" alt="Grupo Jet"/>
-    <p class="kicker">Grupo Jet · cadastro do time · web</p>
-    <div class="accent"></div>
-    <h1>Quem é quem</h1>
-    <p class="lede">Escolha o papel no campo abaixo. O formulário mostra só o que importa pro seu caso.</p>
-  </div>
-
-  <section class="block">
-    <h2 class="block-title">Você</h2>
-    <label class="field" for="nome">1. Nome completo <span class="req">*</span></label>
-    <input id="nome" autocomplete="name" placeholder="Nome e sobrenome"/>
-    <label class="field" for="wa">2. WhatsApp <span class="req">*</span></label>
-    <input id="wa" inputmode="tel" autocomplete="tel" placeholder="62 9XXXX-XXXX"/>
-    <p class="hint">O número que você usa no dia a dia.</p>
-  </section>
-
-  <section class="block">
-    <h2 class="block-title">Foto</h2>
-    <p class="block-help">Rosto pra o time se conhecer. Pode tirar agora ou escolher da galeria.</p>
-    <div class="photo-box" id="photo_box">
-      <img id="foto_preview" alt="Prévia da foto"/>
-      <div class="photo-actions">
-        <label class="file-btn" for="foto_camera">Tirar foto (câmera)</label>
-        <input id="foto_camera" 
+    <img class="logo-h" width="180" height="42" src="data:image/webp;base64,UklGRn4cAABXRUJQVlA4WAoAAAAQAAAAFwEAOAAAQUxQSPsRAAAB8Ib/v2o7zbb9xhhz73iCu7sFCMGlWAonJKXoSaBOqCD1Fnd3d3eOC3e3XhSpO7lwCIXghJDsZK/xH//vi73WnCs710nPlxExAfrf0Dh4w39agzmF/6zGb7/NIF09SfE/p6CF38DK4Jz91yMXVPyPKWpcvw9W4KXxil+aYttBENt2I+mbZAapl37eX1Pxy9J8n3T24AFaPFZ9WYqrrTd27Nj1xyjMo9611x277tixw7oQ9SQ2iDC2VvwyFLTE23NmzZ4zcz3FeRI1bmbf7Nlz3lxcoUnQgm9SuuXZ8eyNTlH6MhS1NQ68NkRhniR9l0LhGUU1jRo31+lyATLgTW77cpT0szw3z823KWgeXeDZs5+p1Cjpm1iXCrMv3nHlzY+bSWnwwJelexl4tKp5E/RbjMzkrpxD7k5h6sYaOOGL4vWu/HKknksffeiRhx/dVHGeBC35EcW9bx3FRlFPYl0p/v5K2uPxV84arUvJ9Q75khQ0KJO2MffCyyMVmgQtPI3SFeNA/QDgZ/HblHo7dCnEmOrHBiGmgVWIVUopxQapbZsQU+0YuhBS3RjmSax6enp6YugUU83QIaUh6WdkjPtiTxpYJ2qDue7dcN5fZPRbtPrtUk2p5Xy2omKzkKKax9ApJQ3apMYx1YspqGGK86BhTKofU5uBN2AYP1PzpG+Q6abxG21ihcxPdRa5RuFvwxSahCRp+BqbbrfzpJo7rKqOSZKW3XCrCZMmTdx9+TV3nzhp4m5rKtQZstPXJk362sRhClEjN95hUuedtt5wUUmxU0iSVvzK5ENOOuOCS84++de7r9crxdC1zb8+cdLE3ZZWkGKSqrUn/ujYsy6+6PRjv7f1UpKipM123XniaziFE3baZdKkSZMmjqp1ZpcyF+mHZIptq0exGplbldQwSEsdcNfrMzL1Z1wzPARJSem/LvzzR3Npu+f9DDxQqVPUFgycvoCivvPKXGrPffeeyVGxXZRWOuT5j52as6eet4kUuxK0wNsM3F5JURp/9j9mUvP9+/ZOShoyjY5O+xkLK3SIehTrirG/LsScT5Ya+hqlhnF4o6ChJ3zAwFLTzJwTlKSobZ5joJdiZcY6b1s2m7uOYqdKB5X+0
