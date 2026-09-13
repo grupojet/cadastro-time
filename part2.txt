@@ -1,0 +1,157 @@
+  if (!file) return;
+    if (!file.type || file.type.indexOf('image/') !== 0) {
+      document.getElementById('foto_status').textContent = 'Escolha uma imagem (foto).';
+      return;
+    }
+    // compress for WhatsApp/JSON size
+    var reader = new FileReader();
+    reader.onload = function(){
+      var img = new Image();
+      img.onload = function(){
+        var max = 720;
+        var w = img.width, h = img.height;
+        if (w > max || h > max) {
+          if (w >= h) { h = Math.round(h * max / w); w = max; }
+          else { w = Math.round(w * max / h); h = max; }
+        }
+        var canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        var ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, w, h);
+        fotoDataUrl = canvas.toDataURL('image/jpeg', 0.82);
+        fotoMime = 'image/jpeg';
+        fotoNome = (file.name || 'foto-cadastro').replace(/\.[^.]+$/, '') + '.jpg';
+        var prev = document.getElementById('foto_preview');
+        prev.src = fotoDataUrl;
+        prev.classList.add('show');
+        document.getElementById('photo_box').classList.add('has-img');
+        document.getElementById('foto_clear').classList.add('show');
+        var kb = Math.round((fotoDataUrl.length * 0.75) / 1024);
+        document.getElementById('foto_status').textContent = 'Foto pronta (~' + kb + ' KB). Vai no cadastro.';
+      };
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  }
+  function clearFoto(){
+    fotoDataUrl = ''; fotoNome = ''; fotoMime = '';
+    document.getElementById('foto_camera').value = '';
+    document.getElementById('foto_galeria').value = '';
+    var prev = document.getElementById('foto_preview');
+    prev.removeAttribute('src'); prev.classList.remove('show');
+    document.getElementById('photo_box').classList.remove('has-img');
+    document.getElementById('foto_clear').classList.remove('show');
+    document.getElementById('foto_status').textContent = 'Opcional agora — recomendado.';
+  }
+  document.getElementById('foto_camera').addEventListener('change', function(){ setFoto(this.files && this.files[0]); });
+  document.getElementById('foto_galeria').addEventListener('change', function(){ setFoto(this.files && this.files[0]); });
+  document.getElementById('foto_clear').addEventListener('click', clearFoto);
+
+  function dados(){
+    var key = papelEl.value;
+    var papelLabel = '';
+    if (key === 'outro') papelLabel = document.getElementById('papel_outro').value.trim() || 'Outro';
+    else if (key) papelLabel = LABELS[key] || key;
+    var atividades = Array.prototype.map.call(
+      document.querySelectorAll('#atividades .check:not(.hidden) input:checked'),
+      function(i){ return i.value; }
+    );
+    var vinculo = (key === 'socio') ? 'Sócio' : vinculoEl.value;
+    return {
+      tipo: 'cadastro_time_jota',
+      versao: 'web',
+      nome: document.getElementById('nome').value.trim(),
+      whatsapp: document.getElementById('wa').value.trim(),
+      papel: papelLabel,
+      papel_key: key,
+      setor: papelLabel,
+      funcao: papelLabel,
+      atividades: atividades,
+      cidade: document.getElementById('cidade').value.trim(),
+      vinculo: vinculo,
+      gestor: document.getElementById('gestor').value.trim(),
+      obs: document.getElementById('obs').value.trim(),
+      foto: fotoDataUrl ? { nome: fotoNome, mimetype: fotoMime, dataUrl: fotoDataUrl } : null
+    };
+  }
+  function resumo(p){
+    var faltando = [];
+    if (!p.nome) faltando.push('nome');
+    if (!p.whatsapp) faltando.push('whatsapp');
+    if (!p.papel) faltando.push('papel');
+    if (p.papel_key === 'outro' && !document.getElementById('papel_outro').value.trim()) faltando.push('descrição do papel');
+    if (!p.cidade) faltando.push('cidade');
+    if (p.papel_key !== 'socio' && !p.vinculo) faltando.push('vínculo');
+    if (faltando.length) return 'Falta preencher: ' + faltando.join(', ');
+    var lines = [
+      'CADASTRO DO TIME — GRUPO JET',
+      'Nome: ' + p.nome,
+      'WhatsApp: ' + p.whatsapp,
+      'Papel: ' + p.papel,
+      'Cidade: ' + p.cidade,
+      'Vínculo: ' + p.vinculo
+    ];
+    if (p.papel_key !== 'socio') {
+      lines.splice(4, 0, 'Atividades: ' + (p.atividades.length ? p.atividades.join('; ') : '-'));
+      lines.push('Gestor: ' + (p.gestor || '-'));
+    }
+    lines.push('Foto: ' + (p.foto ? 'sim (' + p.foto.nome + ')' : 'não'));
+    lines.push('Obs: ' + (p.obs || '-'));
+    return lines.join('\n');
+  }
+  var JOTA_WA = '5508006483496';
+  function showOut(texto, okMsg){
+    var out = document.getElementById('out');
+    var ok = document.getElementById('ok');
+    out.style.display = 'block';
+    out.textContent = texto;
+    if (texto.indexOf('Falta preencher') === 0) { ok.style.display = 'none'; return false; }
+    if (okMsg) { ok.textContent = okMsg; ok.style.display = 'block'; }
+    return true;
+  }
+  function openWhatsApp(texto){
+    // Keep payload SHORT — iOS Safari / WA WebView choke on long query strings.
+    // Never put photo base64 in the URL.
+    var encoded = encodeURIComponent(texto);
+    if (encoded.length > 1800) {
+      // trim obs/atividades if somehow huge
+      texto = texto.split('\n').filter(function(line){
+        return line.indexOf('Obs:') !== 0;
+      }).join('\n');
+      encoded = encodeURIComponent(texto);
+    }
+    var httpsUrl = 'https://wa.me/' + JOTA_WA + '?text=' + encoded;
+    var schemeUrl = 'whatsapp://send?phone=' + JOTA_WA + '&text=' + encoded;
+    // Prefer native scheme on iPhone; fall back to https
+    var isiOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    var url = isiOS ? schemeUrl : httpsUrl;
+    try {
+      // Same-tab navigation is more reliable than synthetic <a click> inside WA/Files WebView
+      window.location.href = url;
+    } catch (e1) {
+      try { window.open(httpsUrl, '_blank'); } catch (e2) {}
+    }
+    // Also expose https link as visible fallback
+    var out = document.getElementById('out');
+    out.style.display = 'block';
+    out.textContent = texto + '\n\n---\nSe o Zap não abriu, toque no link:\n' + httpsUrl;
+    return httpsUrl;
+  }
+  document.getElementById('btnWa').onclick = function(){
+    var p = dados();
+    var texto = resumo(p);
+    if (!showOut(texto, 'Abrindo o WhatsApp…')) return;
+    openWhatsApp(texto);
+    var ok = document.getElementById('ok');
+    ok.style.display = 'block';
+    if (fotoDataUrl) {
+      ok.textContent = 'Zap com o texto. A foto NÃO vai no link (limite do iPhone) — use “Copiar resumo”, cole no J, e mande a foto em seguida no chat. Ou “Baixar meu cadastro”.';
+      // Auto-copy text to help
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(texto).catch(function(){});
+      }
+    } else {
+      ok.textContent = 'Se o Zap não abriu: Copiar resumo → cole no JOTA 0800. Ou toque no link que apareceu abaixo.';
+    }
+  };
+  document.getElementById('btnLink').onclick = function(){
