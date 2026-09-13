@@ -1,4 +1,12 @@
-ados(){
+mentById('photo_box').classList.remove('has-img');
+    document.getElementById('foto_clear').classList.remove('show');
+    document.getElementById('foto_status').textContent = 'Opcional agora — recomendado.';
+  }
+  document.getElementById('foto_camera').addEventListener('change', function(){ setFoto(this.files && this.files[0]); });
+  document.getElementById('foto_galeria').addEventListener('change', function(){ setFoto(this.files && this.files[0]); });
+  document.getElementById('foto_clear').addEventListener('click', clearFoto);
+
+  function dados(){
     var key = papelEl.value;
     var papelLabel = '';
     if (key === 'outro') papelLabel = document.getElementById('papel_outro').value.trim() || 'Outro';
@@ -50,56 +58,7 @@ ados(){
     lines.push('Obs: ' + (p.obs || '-'));
     return lines.join('\n');
   }
-  // Enviar = abre issue no GitHub já preenchida (funciona no Safari).
-  // Action no repo grava em submissions/. Sem webhook/placeholder.
-  function abrirIssueGitHub(texto, p) {
-    var title = '[cadastro-time] ' + (p.nome || 'sem-nome') + ' — ' + (p.papel || '');
-    var body = [
-      '## Cadastro do time (ops interno)',
-      '',
-      '```json',
-      JSON.stringify({ type: 'cadastro-time', payload: p, resumo: texto, sentAt: new Date().toISOString() }, null, 2),
-      '```',
-      '',
-      '### Resumo',
-      '```',
-      texto,
-      '```'
-    ].join('\\n');
-    // GitHub caps query length — keep body shorter if needed
-    if (body.length > 5500) {
-      body = [
-        '## Cadastro do time',
-        '',
-        '- Nome: ' + (p.nome || ''),
-        '- WhatsApp: ' + (p.whatsapp || ''),
-        '- Papel: ' + (p.papel || ''),
-        '- Cidade: ' + (p.cidade || ''),
-        '- Vínculo: ' + (p.vinculo || ''),
-        '- Gestor: ' + (p.gestor || ''),
-        '- Atividades: ' + ((p.atividades || []).join('; ')),
-        '- Obs: ' + (p.obs || ''),
-        '',
-        texto
-      ].join('\\n');
-    }
-    var url = 'https://github.com/grupojet/cadastro-time/issues/new?title=' +
-      encodeURIComponent(title) + '&body=' + encodeURIComponent(body);
-    var out = document.getElementById('out');
-    out.style.display = 'block';
-    out.textContent = texto;
-    var a = document.createElement('a');
-    a.href = url;
-    a.target = '_blank';
-    a.rel = 'noopener';
-    a.textContent = 'Se não abriu: toque aqui pra enviar o cadastro';
-    a.style.cssText = 'display:block;margin-top:12px;color:#FF5722;font-weight:700;font-size:17px;';
-    out.appendChild(a);
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(texto).catch(function(){});
-    }
-    window.location.href = url;
-  }
+  var JOTA_CADASTRO_WEBHOOK = 'https://plates-minute-cloth-specialist.trycloudflare.com';
 
   async function enviarCadastro() {
     var p = dados();
@@ -114,8 +73,39 @@ ados(){
     var ok = document.getElementById('ok');
     btn.disabled = true;
     ok.style.display = 'block';
-    ok.textContent = 'Abrindo envio no GitHub… confirme com Submit issue.';
-    abrirIssueGitHub(texto, p);
+    ok.textContent = 'Enviando pro JOTA…';
+
+    var body = {
+      type: 'cadastro-time',
+      source: 'cadastro-time-form',
+      payload: p,
+      resumo: texto,
+      sentAt: new Date().toISOString()
+    };
+    try {
+      var prev = document.getElementById('foto_preview');
+      if (prev && prev.src && prev.src.indexOf('data:image') === 0 && prev.src.length < 180000) {
+        body.fotoDataUrl = prev.src;
+      } else if (prev && prev.src && prev.src.indexOf('data:image') === 0) {
+        body.fotoOmitida = true;
+      }
+    } catch (e) {}
+
+    try {
+      var r = await fetch(JOTA_CADASTRO_WEBHOOK, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+        mode: 'cors',
+        keepalive: true
+      });
+      var j = {};
+      try { j = await r.json(); } catch (e2) {}
+      if (!r.ok) throw new Error((j && j.error) || ('HTTP ' + r.status));
+      ok.textContent = 'Enviado. Cadastro salvo (issue ' + (j.number || '') + '). Valeu!';
+    } catch (e) {
+      ok.textContent = 'Falha no envio: ' + String(e) + ' — tente de novo ou avise o JOTA.';
+    }
     btn.disabled = false;
   }
 
