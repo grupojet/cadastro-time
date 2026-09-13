@@ -1,4 +1,4 @@
-an></label>
+s="field" for="cidade">Cidade base <span class="req">*</span></label>
     <input id="cidade" placeholder="Ex.: Goiânia"/>
 
     <div id="wrap_gestor" class="hidden">
@@ -13,9 +13,8 @@ an></label>
   <div class="actions">
     <button class="primary" type="button" id="btnSend">Enviar dados</button>
     <button class="ghost" type="button" id="btnCopy">Copiar resumo</button>
-    <button class="ghost" type="button" id="btnLink">Abrir link do WhatsApp</button>
-    <button class="ghost" type="button" id="btnJson">Baixar meu cadastro</button>
-    <p class="ok" id="ok">Abrindo o WhatsApp com seu cadastro…</p>
+<button class="ghost" type="button" id="btnJson">Baixar meu cadastro</button>
+    <p class="ok" id="ok">Toque em Enviar dados pra mandar pro JOTA.</p>
     <div class="out" id="out"></div>
     <p class="slogan">Conectar é só o começo.</p>
   </div>
@@ -135,4 +134,4 @@ an></label>
   }
   document.getElementById('foto_camera').addEventListener('change', function(){ setFoto(this.files && this.files[0]); });
   document.getElementById('foto_galeria').addEventListener('change', function(){ setFoto(this.files && this.files[0]); });
-  document.getElementById('foto_clear'
+  document.getElementById('foto_clear').addEventList

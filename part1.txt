@@ -1,4 +1,4 @@
-e: 15px; padding: 8px; font-family: inherit;
+0; font-size: 15px; padding: 8px; font-family: inherit;
   }
   #foto_clear.show { display: block; }
   #foto_status { font-size: 14px; color: #8A8A8A; margin: 8px 0 0; }
@@ -8,7 +8,7 @@ e: 15px; padding: 8px; font-family: inherit;
 <body>
 <div class="wrap">
   <div class="hero">
-    <img class="logo-h" width="180" height="42" src="https://cdn.jsdelivr.net/gh/grupojet/cadastro-time@main/logo.svg" alt="Grupo Jet"/>
+    <img class="logo-h" width="180" height="42" src="https://cdn.jsdelivr.net/gh/grupojet/cadastro-time@c476ffeceef412f0a2fcf8184fbbf971fa3e40ca/logo.svg" alt="Grupo Jet"/>
     <p class="kicker">Grupo Jet · cadastro do time · web</p>
     <div class="accent"></div>
     <h1>Quem é quem</h1>
@@ -95,4 +95,4 @@ e: 15px; padding: 8px; font-family: inherit;
       </select>
     </div>
 
-    <label class="field" for="cidade">Cidade base <span class="req">*</sp
+    <label clas

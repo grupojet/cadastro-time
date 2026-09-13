@@ -1,4 +1,4 @@
-).addEventListener('click', clearFoto);
+ener('click', clearFoto);
 
   function dados(){
     var key = papelEl.value;
