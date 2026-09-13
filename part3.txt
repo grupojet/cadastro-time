@@ -1,15 +1,4 @@
-.trim(),
-      whatsapp: document.getElementById('wa').value.trim(),
-      papel: papelLabel,
-      papel_key: key,
-      setor: papelLabel,
-      funcao: papelLabel,
-      atividades: atividades,
-      cidade: document.getElementById('cidade').value.trim(),
-      vinculo: vinculo,
-      gestor: document.getElementById('gestor').value.trim(),
-      obs: document.getElementById('obs').value.trim(),
-      foto: fotoDataUrl ? { nome: fotoNome, mimetype: fotoMime, dataUrl: fotoDataUrl } : null
+fotoNome, mimetype: fotoMime, dataUrl: fotoDataUrl } : null
     };
   }
   function resumo(p){
@@ -41,15 +30,52 @@
   // Placeholder até o Ruan colar o Webhook URL da rotina.
   var JOTA_CADASTRO_WEBHOOK = 'WEBHOOK_URL_PLACEHOLDER';
 
+  function abrirZapJ(texto) {
+    var JOTA_WA = '5508006483496';
+    var encoded = encodeURIComponent(texto);
+    if (encoded.length > 1800) {
+      texto = texto.split('\n').filter(function(line){ return line.indexOf('Obs:') !== 0; }).join('\n');
+      encoded = encodeURIComponent(texto);
+    }
+    var httpsUrl = 'https://wa.me/' + JOTA_WA + '?text=' + encoded;
+    var out = document.getElementById('out');
+    out.style.display = 'block';
+    out.innerHTML = '';
+    out.appendChild(document.createTextNode(texto + '\n\n---\nSe o Zap não abriu, toque:\n'));
+    var a = document.createElement('a');
+    a.href = httpsUrl;
+    a.target = '_blank';
+    a.rel = 'noopener';
+    a.textContent = 'Abrir WhatsApp do J com meu cadastro';
+    a.style.cssText = 'display:block;margin-top:10px;color:#FF5722;font-weight:700;word-break:break-all;';
+    out.appendChild(a);
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(texto).catch(function(){});
+    }
+    // Prefer user-gesture navigation via synthetic anchor (works better than location in previews)
+    var go = document.createElement('a');
+    go.href = httpsUrl;
+    go.target = '_blank';
+    go.rel = 'noopener';
+    document.body.appendChild(go);
+    go.click();
+    go.remove();
+    return httpsUrl;
+  }
+
   async function enviarCadastro() {
     var p = dados();
     var texto = resumo(p);
-    if (!showOut(texto)) return;
+    if (!showOut(texto)) {
+      document.getElementById('ok').style.display = 'block';
+      document.getElementById('ok').textContent = texto;
+      return;
+    }
     var btn = document.getElementById('btnSend');
     var ok = document.getElementById('ok');
     btn.disabled = true;
     ok.style.display = 'block';
-    ok.textContent = 'Enviando pro JOTA…';
+    ok.textContent = 'Enviando…';
 
     var body = {
       type: 'cadastro-time',
@@ -58,7 +84,6 @@
       resumo: texto,
       sentAt: new Date().toISOString()
     };
-    // foto: only send if small enough for webhook (< ~200kb data url)
     try {
       var prev = document.getElementById('foto_preview');
       if (prev && prev.src && prev.src.indexOf('data:image') === 0 && prev.src.length < 180000) {
@@ -69,20 +94,8 @@
     } catch (e) {}
 
     if (!JOTA_CADASTRO_WEBHOOK || JOTA_CADASTRO_WEBHOOK.indexOf('PLACEHOLDER') >= 0) {
-      // Fallback temporário: manda resumo pro Zap do J (0800) até o webhook estar plugado.
-      var JOTA_WA = '5508006483496';
-      var encoded = encodeURIComponent(texto);
-      if (encoded.length > 1800) {
-        texto = texto.split('\n').filter(function(line){ return line.indexOf('Obs:') !== 0; }).join('\n');
-        encoded = encodeURIComponent(texto);
-      }
-      var httpsUrl = 'https://wa.me/' + JOTA_WA + '?text=' + encoded;
-      var schemeUrl = 'whatsapp://send?phone=' + JOTA_WA + '&text=' + encoded;
-      var isiOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-      ok.textContent = 'Webhook ainda não plugado — abrindo o Zap do J com seu cadastro…';
-      try { window.location.href = isiOS ? schemeUrl : httpsUrl; } catch (e1) {
-        try { window.open(httpsUrl, '_blank'); } catch (e2) {}
-      }
+      ok.textContent = 'Abrindo WhatsApp do J… Se não abrir, toque no link laranja abaixo (resumo já copiado).';
+      abrirZapJ(texto);
       btn.disabled = false;
       return;
     }
@@ -98,7 +111,6 @@
       if (!r.ok) throw new Error('HTTP ' + r.status);
       ok.textContent = 'Enviado pro JOTA. Valeu — dados salvos no repositório.';
     } catch (e) {
-      // Fallback: no-cors opaque POST (browser can't read response)
       try {
         await fetch(JOTA_CADASTRO_WEBHOOK, {
           method: 'POST',
@@ -109,7 +121,8 @@
         });
         ok.textContent = 'Envio disparado pro JOTA. Se em 1 min não confirmar no chat, avisa o Ruan.';
       } catch (e2) {
-        ok.textContent = 'Falhou o envio. ' + String(e2);
+        ok.textContent = 'Webhook falhou — abrindo Zap do J com o resumo.';
+        abrirZapJ(texto);
         btn.disabled = false;
         return;
       }
