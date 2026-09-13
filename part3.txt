@@ -1,8 +1,4 @@
-mentById('photo_box').classList.remove('has-img');
-    document.getElementById('foto_clear').classList.remove('show');
-    document.getElementById('foto_status').textContent = 'Opcional agora — recomendado.';
-  }
-  document.getElementById('foto_camera').addEventListener('change', function(){ setFoto(this.files && this.files[0]); });
+s[0]); });
   document.getElementById('foto_galeria').addEventListener('change', function(){ setFoto(this.files && this.files[0]); });
   document.getElementById('foto_clear').addEventListener('click', clearFoto);
 
@@ -58,7 +54,21 @@ mentById('photo_box').classList.remove('has-img');
     lines.push('Obs: ' + (p.obs || '-'));
     return lines.join('\n');
   }
-  var JOTA_CADASTRO_WEBHOOK = 'https://plates-minute-cloth-specialist.trycloudflare.com';
+
+  function showOut(texto, okMsg) {
+    var out = document.getElementById('out');
+    var ok = document.getElementById('ok');
+    out.style.display = 'block';
+    out.textContent = texto;
+    if (String(texto).indexOf('Falta preencher') === 0) {
+      if (ok) ok.style.display = 'none';
+      return false;
+    }
+    if (okMsg && ok) { ok.textContent = okMsg; ok.style.display = 'block'; }
+    return true;
+  }
+
+  var JOTA_CADASTRO_WEBHOOK = 'https://plates-minute-cloth-specialist.trycloudflare.com/api/cadastro-time';
 
   async function enviarCadastro() {
     var p = dados();
