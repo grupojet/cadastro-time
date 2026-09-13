@@ -1,10 +1,4 @@
-rea id="obs" placeholder="Turno, equipe, base — só se ajudar"></textarea>
-  </section>
-
-  <div class="actions">
-    <button class="primary" type="button" id="btnSend">Enviar dados</button>
-    <button class="ghost" type="button" id="btnCopy">Copiar resumo</button>
-<button class="ghost" type="button" id="btnJson">Baixar meu cadastro</button>
+e="button" id="btnJson">Baixar meu cadastro</button>
     <p class="ok" id="ok">Toque em Enviar dados pra mandar pro JOTA.</p>
     <div class="out" id="out"></div>
     <p class="slogan">Conectar é só o começo.</p>
@@ -140,4 +134,15 @@ rea id="obs" placeholder="Turno, equipe, base — só se ajudar"></textarea>
     return {
       tipo: 'cadastro_time_jota',
       versao: 'web',
-      nome: document.getElementById('nome').value
+      nome: document.getElementById('nome').value.trim(),
+      whatsapp: document.getElementById('wa').value.trim(),
+      papel: papelLabel,
+      papel_key: key,
+      setor: papelLabel,
+      funcao: papelLabel,
+      atividades: atividades,
+      cidade: document.getElementById('cidade').value.trim(),
+      vinculo: vinculo,
+      gestor: document.getElementById('gestor').value.trim(),
+      obs: document.getElementById('obs').value.trim(),
+      foto: fotoDataUrl ? { nome: 
