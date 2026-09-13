@@ -86,4 +86,4 @@
   .photo-actions input[type="file"] { display: none; }
   #foto_clear {
     display: none; width: 100%; border-radius: 12px; border: 0; background: transparent;
-    color: #FF5722; font-weight: 600; font-size: 15px; padding: 8px; font-fam
+    color: #FF5722; font-weight: 600; font-size:
