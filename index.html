@@ -1,24 +1,13 @@
 <!DOCTYPE html>
-<html lang="pt-BR"><head>
+<html lang="pt-BR">
+<head>
 <meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Cadastro do time | Grupo Jet</title>
-<style>body{margin:0;font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#E8E8E8;color:#5A5A5A;padding:24px;text-align:center}</style>
-</head><body>
-<p>Carregando…</p>
-<script>
-(async function(){
-  var n=4, parts=[], base='https://cdn.jsdelivr.net/gh/grupojet/cadastro-time@f903556c08d153b80efc6c4424959b5670a1b7fa/';
-  try {
-    for (var i=0;i<n;i++){
-      var r=await fetch(base+'part'+i+'.txt',{cache:'no-store'});
-      if(!r.ok) throw new Error('part '+i+' HTTP '+r.status);
-      parts.push(await r.text());
-    }
-    document.open(); document.write(parts.join('')); document.close();
-  } catch(e) {
-    document.body.innerHTML='<p style="color:#FF5722">Falha: '+e+'</p>';
-  }
-})();
-</script>
-</body></html>
+<meta http-equiv="refresh" content="0; url=form.html"/>
+<script>location.replace("form.html");</script>
+</head>
+<body>
+<p><a href="form.html">Abrir cadastro do time</a></p>
+</body>
+</html>
