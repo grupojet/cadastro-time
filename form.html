@@ -1,1 +1,87 @@
-SEE_FILE
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="theme-color" content="#E8E8E8"/>
+<title>Cadastro do time | Grupo Jet</title>
+<style>
+html,body{margin:0;width:100%;background:#E8E8E8;color:#3D3D3D;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;font-size:18px;line-height:1.4}
+body{padding:calc(16px + env(safe-area-inset-top,0px)) 16px 24px}
+.wrap{max-width:520px;margin:0 auto}
+.logo-h{width:220px;max-width:85%;height:auto;display:block}
+.kicker{margin:14px 0 0;font-size:13px;font-weight:600;letter-spacing:.10em;text-transform:uppercase;color:#6B6B6B}
+.accent{height:3px;width:40px;background:#FF5722;border-radius:99px;margin:10px 0 14px}
+h1{font-size:28px;margin:0 0 8px;color:#5A5A5A}
+.lede{color:#6B6B6B;font-size:17px;margin:0 0 16px}
+.block{background:#fff;border:1px solid #D0D0D0;border-radius:14px;padding:18px 16px 20px;margin-bottom:12px}
+.block-title{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#5A5A5A;margin:0 0 8px}
+.block-title::before{content:"";width:3px;height:14px;background:#FF5722;border-radius:99px}
+label{display:block;margin:16px 0 8px;font-size:15px;font-weight:600;color:#5A5A5A}
+.req{color:#FF5722}
+input,select,textarea{width:100%;box-sizing:border-box;padding:14px 12px;border:1px solid #D0D0D0;border-radius:12px;font-size:17px;min-height:52px;font-family:inherit;background:#fff}
+textarea{min-height:96px}
+button.primary{width:100%;border:0;background:#FF5722;color:#fff;font-weight:700;padding:16px;border-radius:12px;min-height:56px;font-size:18px;margin-top:8px}
+.ok{margin-top:12px;padding:12px;border-radius:10px;background:#FFF3EE;color:#FF5722;font-weight:600;text-align:center;display:none}
+.slogan{margin:16px 0 0;text-align:center;color:#6B6B6B;font-size:15px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <img class="logo-h" width="180" height="42" src="https://cdn.jsdelivr.net/gh/grupojet/cadastro-time@de7945a557870dde3ef969e7ac07c546735a512d/logo.png" alt="Grupo Jet"/>
+  <p class="kicker">Grupo Jet · cadastro do time · web</p>
+  <div class="accent"></div>
+  <h1>Quem é quem</h1>
+  <p class="lede">Preenche e envia. O Jota guarda a ficha do setor.</p>
+  <section class="block">
+    <h2 class="block-title">Você</h2>
+    <label for="nome">1. Nome completo <span class="req">*</span></label>
+    <input id="nome" autocomplete="name" placeholder="Nome e sobrenome"/>
+    <label for="wa">2. WhatsApp <span class="req">*</span></label>
+    <input id="wa" inputmode="tel" autocomplete="tel" placeholder="62 9XXXX-XXXX"/>
+  </section>
+  <section class="block">
+    <h2 class="block-title">Papel</h2>
+    <label for="papel">3. Qual é o seu papel? <span class="req">*</span></label>
+    <select id="papel">
+      <option value="">Toque para escolher…</option>
+      <option value="socio">Sócio</option>
+      <option value="tecnico">Técnico de campo</option>
+      <option value="noc">NOC / Operações</option>
+      <option value="projetos">Projetos</option>
+      <option value="financeiro">Financeiro</option>
+      <option value="comercial">Comercial</option>
+      <option value="rh">RH / Admin</option>
+      <option value="ti">TI / Sistemas</option>
+      <option value="coordenacao">Coordenação / Gestão</option>
+      <option value="outro">Outro</option>
+    </select>
+    <label for="cidade">Cidade base <span class="req">*</span></label>
+    <input id="cidade" placeholder="Ex.: Goiânia"/>
+    <label for="obs">Observação (opcional)</label>
+    <textarea id="obs" placeholder="Turno, equipe, se é responsável do setor"></textarea>
+  </section>
+  <button class="primary" type="button" id="btnSend">Enviar dados</button>
+  <p class="ok" id="ok"></p>
+  <p class="slogan">Conectar é só o começo.</p>
+</div>
+<script>
+document.getElementById('btnSend').onclick=function(){
+  var nome=document.getElementById('nome').value.trim();
+  var wa=document.getElementById('wa').value.trim();
+  var papel=document.getElementById('papel').value;
+  var cidade=document.getElementById('cidade').value.trim();
+  var obs=document.getElementById('obs').value.trim();
+  var ok=document.getElementById('ok');
+  ok.style.display='block';
+  if(!nome||!wa||!papel||!cidade){ok.textContent='Falta preencher: nome, WhatsApp, papel e cidade.';return;}
+  var labels={socio:'Sócio',tecnico:'Técnico de campo',noc:'NOC / Operações',projetos:'Projetos',financeiro:'Financeiro',comercial:'Comercial',rh:'RH / Admin',ti:'TI / Sistemas',coordenacao:'Coordenação / Gestão',outro:'Outro'};
+  var payload={type:'cadastro-time',payload:{nome:nome,whatsapp:wa,papel:papel,papel_label:labels[papel]||papel,cidade:cidade,obs:obs},sentAt:new Date().toISOString()};
+  var title='[cadastro-time] '+nome+' \u2014 '+(labels[papel]||papel);
+  var body='## Cadastro do time (ops interno)\n\n```json\n'+JSON.stringify(payload,null,2)+'\n```\n';
+  ok.textContent='Abrindo o GitHub\u2026 toque em Submit.';
+  location.href='https://github.com/grupojet/cadastro-time/issues/new?title='+encodeURIComponent(title)+'&body='+encodeURIComponent(body);
+};
+</script>
+</body>
+</html>
