@@ -42,7 +42,7 @@ button.primary{width:100%;border:0;background:#FF5722;color:#fff;font-weight:700
   <p class="kicker">Grupo Jet · cadastro do time · web</p>
   <div class="accent"></div>
   <h1>Quem é quem</h1>
-  <p class="lede">Sem login. Enviar abre o WhatsApp com a ficha pronta. Manda no grupo do time.</p>
+  <p class="lede">Sem login. Enviar grava no Jota via Cloudflare.</p>
   <section class="block">
     <h2 class="block-title">Você</h2>
     <label class="field" for="nome">1. Nome completo <span class="req">*</span></label>
@@ -52,7 +52,7 @@ button.primary{width:100%;border:0;background:#FF5722;color:#fff;font-weight:700
   </section>
   <section class="block">
     <h2 class="block-title">Foto</h2>
-    <p class="help">Rosto pra o time se conhecer. No WhatsApp você anexa a foto na conversa.</p>
+    <p class="help">Rosto pra o time se conhecer.</p>
     <div class="photo-box" id="box">
       <img id="prev" alt="Prévia"/>
       <label class="file-btn" for="cam">Tirar foto (câmera)</label>
@@ -84,11 +84,12 @@ button.primary{width:100%;border:0;background:#FF5722;color:#fff;font-weight:700
     <label class="field" for="obs">Observação (opcional)</label>
     <textarea id="obs" placeholder="Turno, equipe, se é responsável do setor"></textarea>
   </section>
-  <button class="primary" type="button" id="btnSend">Enviar no WhatsApp</button>
+  <button class="primary" type="button" id="btnSend">Enviar dados</button>
   <p class="ok" id="ok"></p>
   <p class="slogan">Conectar é só o começo.</p>
 </div>
 <script>
+var API='https://jota-waba-hook.ruan-lobo.workers.dev/api/cadastro-time';
 var hasFoto=false;
 function setFoto(f){
   if(!f||String(f.type).indexOf('image/')!==0){document.getElementById('fst').textContent='Escolha uma imagem.';return;}
@@ -105,7 +106,7 @@ function setFoto(f){
       document.getElementById('box').classList.add('on');
       document.getElementById('clr').classList.add('show');
       hasFoto=true;
-      document.getElementById('fst').textContent='Foto pronta. No WhatsApp anexa ela na mensagem.';
+      document.getElementById('fst').textContent='Foto pronta.';
     };
     img.src=r.result;
   };
@@ -122,7 +123,7 @@ document.getElementById('clr').onclick=function(){
   document.getElementById('clr').classList.remove('show');
   document.getElementById('fst').textContent='Opcional agora — recomendado.';
 };
-document.getElementById('btnSend').onclick=function(){
+document.getElementById('btnSend').onclick=async function(){
   var nome=document.getElementById('nome').value.trim();
   var wa=document.getElementById('wa').value.trim();
   var papel=document.getElementById('papel').value;
@@ -131,9 +132,17 @@ document.getElementById('btnSend').onclick=function(){
   var ok=document.getElementById('ok');ok.style.display='block';
   if(!nome||!wa||!papel||!cidade){ok.textContent='Falta preencher: nome, WhatsApp, papel e cidade.';return;}
   var labels={socio:'Sócio',tecnico:'Técnico de campo',noc:'NOC / Operações',projetos:'Projetos',financeiro:'Financeiro',comercial:'Comercial',rh:'RH / Admin',ti:'TI / Sistemas',coordenacao:'Coordenação / Gestão',outro:'Outro'};
-  var txt=['CADASTRO DO TIME — GRUPO JET','Nome: '+nome,'WhatsApp: '+wa,'Papel: '+(labels[papel]||papel),'Cidade: '+cidade,'Foto: '+(hasFoto?'vou anexar':'nao'),'Obs: '+(obs||'-')].join('\n');
-  ok.textContent='Abrindo o WhatsApp. Escolhe o grupo do time e envia.';
-  location.href='https://wa.me/?text='+encodeURIComponent(txt);
+  var btn=document.getElementById('btnSend');btn.disabled=true;
+  ok.textContent='Enviando…';
+  try{
+    var r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},mode:'cors',body:JSON.stringify({type:'cadastro-time',payload:{nome:nome,whatsapp:wa,papel:papel,papel_label:labels[papel]||papel,cidade:cidade,obs:obs,foto:hasFoto}})});
+    var j={};try{j=await r.json();}catch(e){}
+    if(!r.ok||!j.ok) throw new Error((j&&j.error)||('HTTP '+r.status));
+    ok.textContent='Enviado. Valeu!';
+  }catch(e){
+    ok.textContent='Falha: '+String(e)+' — tenta de novo.';
+  }
+  btn.disabled=false;
 };
 </script>
 </body>
