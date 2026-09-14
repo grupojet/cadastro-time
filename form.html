@@ -97,12 +97,12 @@ function setFoto(f){
   r.onload=function(){
     var img=new Image();
     img.onload=function(){
-      var max=720,w=img.width,h=img.height;
+      var max=480,w=img.width,h=img.height;
       if(w>max||h>max){if(w>=h){h=Math.round(h*max/w);w=max;}else{w=Math.round(w*max/h);h=max;}}
       var c=document.createElement('canvas');c.width=w;c.height=h;
       c.getContext('2d').drawImage(img,0,0,w,h);
-      var q=0.82,url=c.toDataURL('image/jpeg',q);
-      while(url.length>360000&&q>0.45){q-=0.1;url=c.toDataURL('image/jpeg',q);}
+      var q=0.72,url=c.toDataURL('image/jpeg',q);
+      while(url.length>48000&&q>0.32){q-=0.08;url=c.toDataURL('image/jpeg',q);}
       fotoDataUrl=url;
       var p=document.getElementById('prev');p.src=url;p.classList.add('show');
       document.getElementById('box').classList.add('on');
