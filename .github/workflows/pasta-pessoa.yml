@@ -29,7 +29,9 @@ jobs:
             const wa = String(p.whatsapp || '').replace(/\D/g, '').slice(-4);
             const dir = 'pessoas/' + slug + (wa ? '-' + wa : '');
             const ficha = Object.assign({}, p, { pasta: dir, issue: issue.number, updatedAt: new Date().toISOString() });
+            const dataUrl = String(p.fotoDataUrl || '');
             delete ficha.fotoDataUrl;
+            ficha.foto = !!dataUrl || !!p.foto;
             const path = dir + '/ficha.json';
             const content = Buffer.from(JSON.stringify(ficha, null, 2)).toString('base64');
             let sha;
@@ -44,4 +46,21 @@ jobs:
               message: 'pasta ' + dir,
               content,
               sha,
+            });
+            const mm = dataUrl.match(/^data:image\/(jpeg|jpg|png|webp);base64,([A-Za-z0-9+/=]+)$/);
+            if (!mm) return;
+            const ext = mm[1] === 'png' ? 'png' : mm[1] === 'webp' ? 'webp' : 'jpg';
+            const fotoPath = dir + '/foto.' + ext;
+            let fotoSha;
+            try {
+              const existing = await github.rest.repos.getContent({ owner: context.repo.owner, repo: context.repo.repo, path: fotoPath });
+              fotoSha = existing.data.sha;
+            } catch (e) {}
+            await github.rest.repos.createOrUpdateFileContents({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              path: fotoPath,
+              message: 'foto ' + dir,
+              content: mm[2],
+              sha: fotoSha,
             });
