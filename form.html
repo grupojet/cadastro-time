@@ -7,21 +7,31 @@
 <title>Cadastro do time | Grupo Jet</title>
 <style>
 html,body{margin:0;width:100%;background:#E8E8E8;color:#3D3D3D;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;font-size:18px;line-height:1.4}
-body{padding:calc(16px + env(safe-area-inset-top,0px)) 16px 24px}
+body{padding:calc(16px + env(safe-area-inset-top,0px)) 16px calc(16px + env(safe-area-inset-bottom,0px))}
 .wrap{max-width:520px;margin:0 auto}
 .logo-h{width:220px;max-width:85%;height:auto;display:block}
-.kicker{margin:14px 0 0;font-size:13px;font-weight:600;letter-spacing:.10em;text-transform:uppercase;color:#6B6B6B}
+.kicker{margin:14px 0 0;font-size:13px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#6B6B6B}
 .accent{height:3px;width:40px;background:#FF5722;border-radius:99px;margin:10px 0 14px}
 h1{font-size:28px;margin:0 0 8px;color:#5A5A5A}
 .lede{color:#6B6B6B;font-size:17px;margin:0 0 16px}
 .block{background:#fff;border:1px solid #D0D0D0;border-radius:14px;padding:18px 16px 20px;margin-bottom:12px}
 .block-title{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#5A5A5A;margin:0 0 8px}
 .block-title::before{content:"";width:3px;height:14px;background:#FF5722;border-radius:99px}
-label{display:block;margin:16px 0 8px;font-size:15px;font-weight:600;color:#5A5A5A}
+.help{color:#8A8A8A;font-size:15px;margin:0 0 8px}
+label.field{display:block;margin:16px 0 8px;font-size:15px;font-weight:600;color:#5A5A5A}
 .req{color:#FF5722}
 input,select,textarea{width:100%;box-sizing:border-box;padding:14px 12px;border:1px solid #D0D0D0;border-radius:12px;font-size:17px;min-height:52px;font-family:inherit;background:#fff}
-textarea{min-height:96px}
-button.primary{width:100%;border:0;background:#FF5722;color:#fff;font-weight:700;padding:16px;border-radius:12px;min-height:56px;font-size:18px;margin-top:8px}
+textarea{min-height:88px}
+.photo-box{margin-top:8px;border:1px dashed #D0D0D0;border-radius:14px;padding:14px;background:#FAFAFA;text-align:center}
+.photo-box.on{border-style:solid;border-color:#FF5722;background:#FFF3EE}
+#prev{display:none;width:120px;height:120px;object-fit:cover;border-radius:50%;margin:0 auto 12px;border:3px solid #FF5722}
+#prev.show{display:block}
+.file-btn{display:block;width:100%;box-sizing:border-box;border-radius:12px;border:1px solid #D0D0D0;background:#fff;color:#5A5A5A;font-weight:600;font-size:17px;padding:14px;min-height:52px;margin:0 0 8px;text-align:center}
+input[type=file]{display:none}
+#clr{display:none;width:100%;border:0;background:transparent;color:#FF5722;font-weight:600;padding:8px;font-size:15px}
+#clr.show{display:block}
+#fst{font-size:14px;color:#8A8A8A;margin:8px 0 0}
+button.primary{width:100%;border:0;background:#FF5722;color:#fff;font-weight:700;padding:16px;border-radius:12px;min-height:56px;font-size:18px}
 .ok{margin-top:12px;padding:12px;border-radius:10px;background:#FFF3EE;color:#FF5722;font-weight:600;text-align:center;display:none}
 .slogan{margin:16px 0 0;text-align:center;color:#6B6B6B;font-size:15px}
 </style>
@@ -32,17 +42,30 @@ button.primary{width:100%;border:0;background:#FF5722;color:#fff;font-weight:700
   <p class="kicker">Grupo Jet · cadastro do time · web</p>
   <div class="accent"></div>
   <h1>Quem é quem</h1>
-  <p class="lede">Preenche e envia. O Jota guarda a ficha do setor.</p>
+  <p class="lede">Foto ajuda o time a se conhecer. Depois envia a ficha.</p>
   <section class="block">
     <h2 class="block-title">Você</h2>
-    <label for="nome">1. Nome completo <span class="req">*</span></label>
+    <label class="field" for="nome">1. Nome completo <span class="req">*</span></label>
     <input id="nome" autocomplete="name" placeholder="Nome e sobrenome"/>
-    <label for="wa">2. WhatsApp <span class="req">*</span></label>
+    <label class="field" for="wa">2. WhatsApp <span class="req">*</span></label>
     <input id="wa" inputmode="tel" autocomplete="tel" placeholder="62 9XXXX-XXXX"/>
   </section>
   <section class="block">
+    <h2 class="block-title">Foto</h2>
+    <p class="help">Rosto pra o time se conhecer. Câmera ou galeria.</p>
+    <div class="photo-box" id="box">
+      <img id="prev" alt="Prévia"/>
+      <label class="file-btn" for="cam">Tirar foto (câmera)</label>
+      <input id="cam" type="file" accept="image/*" capture="user"/>
+      <label class="file-btn" for="gal">Escolher da galeria</label>
+      <input id="gal" type="file" accept="image/*"/>
+      <button type="button" id="clr">Remover foto</button>
+      <p id="fst">Opcional agora — recomendado.</p>
+    </div>
+  </section>
+  <section class="block">
     <h2 class="block-title">Papel</h2>
-    <label for="papel">3. Qual é o seu papel? <span class="req">*</span></label>
+    <label class="field" for="papel">3. Qual é o seu papel? <span class="req">*</span></label>
     <select id="papel">
       <option value="">Toque para escolher…</option>
       <option value="socio">Sócio</option>
@@ -56,9 +79,9 @@ button.primary{width:100%;border:0;background:#FF5722;color:#fff;font-weight:700
       <option value="coordenacao">Coordenação / Gestão</option>
       <option value="outro">Outro</option>
     </select>
-    <label for="cidade">Cidade base <span class="req">*</span></label>
+    <label class="field" for="cidade">Cidade base <span class="req">*</span></label>
     <input id="cidade" placeholder="Ex.: Goiânia"/>
-    <label for="obs">Observação (opcional)</label>
+    <label class="field" for="obs">Observação (opcional)</label>
     <textarea id="obs" placeholder="Turno, equipe, se é responsável do setor"></textarea>
   </section>
   <button class="primary" type="button" id="btnSend">Enviar dados</button>
@@ -66,20 +89,53 @@ button.primary{width:100%;border:0;background:#FF5722;color:#fff;font-weight:700
   <p class="slogan">Conectar é só o começo.</p>
 </div>
 <script>
+var hasFoto=false;
+function setFoto(f){
+  if(!f||String(f.type).indexOf('image/')!==0){document.getElementById('fst').textContent='Escolha uma imagem.';return;}
+  var r=new FileReader();
+  r.onload=function(){
+    var img=new Image();
+    img.onload=function(){
+      var max=720,w=img.width,h=img.height;
+      if(w>max||h>max){if(w>=h){h=Math.round(h*max/w);w=max;}else{w=Math.round(w*max/h);h=max;}}
+      var c=document.createElement('canvas');c.width=w;c.height=h;
+      c.getContext('2d').drawImage(img,0,0,w,h);
+      var url=c.toDataURL('image/jpeg',0.82);
+      var p=document.getElementById('prev');p.src=url;p.classList.add('show');
+      document.getElementById('box').classList.add('on');
+      document.getElementById('clr').classList.add('show');
+      hasFoto=true;
+      document.getElementById('fst').textContent='Foto pronta. No GitHub, anexa ela no Submit.';
+    };
+    img.src=r.result;
+  };
+  r.readAsDataURL(f);
+}
+document.getElementById('cam').onchange=function(){setFoto(this.files&&this.files[0]);};
+document.getElementById('gal').onchange=function(){setFoto(this.files&&this.files[0]);};
+document.getElementById('clr').onclick=function(){
+  hasFoto=false;
+  document.getElementById('cam').value='';
+  document.getElementById('gal').value='';
+  var p=document.getElementById('prev');p.removeAttribute('src');p.classList.remove('show');
+  document.getElementById('box').classList.remove('on');
+  document.getElementById('clr').classList.remove('show');
+  document.getElementById('fst').textContent='Opcional agora — recomendado.';
+};
 document.getElementById('btnSend').onclick=function(){
   var nome=document.getElementById('nome').value.trim();
   var wa=document.getElementById('wa').value.trim();
   var papel=document.getElementById('papel').value;
   var cidade=document.getElementById('cidade').value.trim();
   var obs=document.getElementById('obs').value.trim();
-  var ok=document.getElementById('ok');
-  ok.style.display='block';
+  var ok=document.getElementById('ok');ok.style.display='block';
   if(!nome||!wa||!papel||!cidade){ok.textContent='Falta preencher: nome, WhatsApp, papel e cidade.';return;}
   var labels={socio:'Sócio',tecnico:'Técnico de campo',noc:'NOC / Operações',projetos:'Projetos',financeiro:'Financeiro',comercial:'Comercial',rh:'RH / Admin',ti:'TI / Sistemas',coordenacao:'Coordenação / Gestão',outro:'Outro'};
-  var payload={type:'cadastro-time',payload:{nome:nome,whatsapp:wa,papel:papel,papel_label:labels[papel]||papel,cidade:cidade,obs:obs},sentAt:new Date().toISOString()};
+  var payload={type:'cadastro-time',payload:{nome:nome,whatsapp:wa,papel:papel,papel_label:labels[papel]||papel,cidade:cidade,obs:obs,foto:hasFoto?'anexar-no-github':'nao'},sentAt:new Date().toISOString()};
   var title='[cadastro-time] '+nome+' \u2014 '+(labels[papel]||papel);
-  var body='## Cadastro do time (ops interno)\n\n```json\n'+JSON.stringify(payload,null,2)+'\n```\n';
-  ok.textContent='Abrindo o GitHub\u2026 toque em Submit.';
+  var extra=hasFoto?'\n\nAnexe a foto neste issue (clipe / imagem).\n':'';
+  var body='## Cadastro do time (ops interno)\n\n```json\n'+JSON.stringify(payload,null,2)+'\n```'+extra;
+  ok.textContent='Abrindo o GitHub. Se tirou foto, anexa no Submit.';
   location.href='https://github.com/grupojet/cadastro-time/issues/new?title='+encodeURIComponent(title)+'&body='+encodeURIComponent(body);
 };
 </script>
