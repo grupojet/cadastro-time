@@ -2,12 +2,91 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Cadastro do time | Grupo Jet</title>
-<meta http-equiv="refresh" content="0; url=form.html"/>
-<script>location.replace("form.html");</script>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="theme-color" content="#E8E8E8"/>
+<title>Mesa Grupo Jet</title>
+<style>
+html,body{margin:0;background:#E8E8E8;color:#3D3D3D;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;font-size:16px;line-height:1.45}
+body{padding:calc(16px + env(safe-area-inset-top,0)) 16px 28px}
+.wrap{max-width:720px;margin:0 auto}
+.kicker{margin:0;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#6B6B6B}
+.accent{height:3px;width:40px;background:#FF5722;border-radius:99px;margin:10px 0 12px}
+h1{font-size:26px;margin:0 0 6px;color:#5A5A5A}
+.lede{color:#6B6B6B;margin:0 0 16px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:560px){.grid{grid-template-columns:1fr}}
+.card{background:#fff;border:1px solid #D0D0D0;border-radius:14px;padding:14px 14px 12px}
+.card h2{margin:0 0 8px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#5A5A5A}
+.row{display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-top:1px solid #EFEFEF;font-size:14px}
+.row:first-of-type{border-top:0}
+.ok{color:#1B7A3A;font-weight:700}
+.wait{color:#B45309;font-weight:700}
+.off{color:#B42318;font-weight:700}
+a.btn{display:block;text-align:center;text-decoration:none;background:#FF5722;color:#fff;font-weight:700;border-radius:12px;padding:14px;margin:8px 0 0}
+a.link{color:#FF5722;font-weight:600;text-decoration:none}
+#lista{margin:0;padding:0;list-style:none}
+#lista li{padding:8px 0;border-top:1px solid #EFEFEF;font-size:14px}
+#lista li:first-child{border-top:0}
+.muted{color:#8A8A8A;font-size:13px}
+</style>
 </head>
 <body>
-<p><a href="form.html">Abrir cadastro do time</a></p>
+<div class="wrap">
+  <p class="kicker">Grupo Jet · um lugar</p>
+  <div class="accent"></div>
+  <h1>Mesa do time</h1>
+  <p class="lede">Cadastro, pastas e borda no mesmo endereço. Form intacto. Meta 0800 não muda. Chatmix off.</p>
+  <a class="btn" href="form.html">Abrir cadastro do time</a>
+  <div class="grid" style="margin-top:14px">
+    <section class="card">
+      <h2>Borda</h2>
+      <div class="row"><span>Cadastro Worker</span><span id="s-w">…</span></div>
+      <div class="row"><span>Portal</span><span id="s-p">…</span></div>
+      <div class="row"><span>Jota LLM</span><span id="s-j">…</span></div>
+      <div class="row"><span>Webhook WABA</span><span id="s-h">…</span></div>
+    </section>
+    <section class="card">
+      <h2>Lei</h2>
+      <div class="row"><span>ACK</span><span>interno /incidentes</span></div>
+      <div class="row"><span>Chatmix</span><span class="off">off</span></div>
+      <div class="row"><span>jota-do</span><span>intocado</span></div>
+      <div class="row"><span>Meta Graph</span><span>intocado</span></div>
+    </section>
+  </div>
+  <section class="card" style="margin-top:10px">
+    <h2>Cadastros recentes</h2>
+    <p class="muted" id="meta">Lendo o Worker…</p>
+    <ul id="lista"></ul>
+    <p class="muted"><a class="link" href="https://github.com/grupojet/cadastro-time/tree/main/pessoas">Abrir pastas no GitHub</a> · <a class="link" href="https://github.com/grupojet/cadastro-time/issues">issues</a></p>
+  </section>
+</div>
+<script>
+var API='https://jota-waba-hook.ruan-lobo.workers.dev/api/cadastro-time';
+var HOOK='https://jota-waba-hook.ruan-lobo.workers.dev/webhook/waba?hub.mode=subscribe&hub.challenge=mesa&hub.verify_token=grupojet-jota-0800';
+function mark(id, cls, t){var el=document.getElementById(id);el.className=cls;el.textContent=t;}
+function probe(url, id, okText){
+  return fetch(url,{method:'GET',mode:'cors'}).then(function(r){
+    if(r.ok) mark(id,'ok',okText||('on '+r.status));
+    else if(r.status===1033||r.status===530||r.status===502||r.status===503) mark(id,'wait',r.status+' túnel/origem');
+    else mark(id,'off','HTTP '+r.status);
+  }).catch(function(){mark(id,'off','fora');});
+}
+probe(API,'s-w','on');
+probe('https://jota.grupojet.com.br/','s-j','on');
+probe(HOOK,'s-h','challenge on');
+fetch('https://portal.grupojet.com.br/',{method:'GET',mode:'no-cors'}).then(function(){
+  return fetch('https://portal.grupojet.com.br/',{method:'GET',mode:'cors'}).then(function(r){
+    if(r.ok) mark('s-p','ok','on');
+    else mark('s-p','wait',r.status+' / 1033');
+  }).catch(function(){mark('s-p','wait','1033 / 530');});
+}).catch(function(){mark('s-p','wait','1033 / 530');});
+fetch(API).then(function(r){return r.json();}).then(function(j){
+  var items=j.items||[];
+  document.getElementById('meta').textContent=(j.count||items.length)+' no Worker · maior #'+((items[0]&&items[0].number)||'?');
+  document.getElementById('lista').innerHTML=items.slice(0,12).map(function(i){
+    return '<li><strong>#'+i.number+'</strong> '+(i.title||i.pasta||'').replace('[cadastro-time] ','')+'</li>';
+  }).join('')||'<li>sem item</li>';
+}).catch(function(){document.getElementById('meta').textContent='Worker sem lista agora.';});
+</script>
 </body>
 </html>
