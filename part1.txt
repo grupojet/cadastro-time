@@ -1,4 +1,4 @@
-; background: transparent;
+ background: transparent;
     color: #FF5722; font-weight: 600; font-size: 15px; padding: 8px; font-family: inherit;
   }
   #foto_clear.show { display: block; }
@@ -91,4 +91,4 @@
         <option value="">Toque para escolher…</option>
         <option value="CLT">CLT</option>
         <option value="PJ">PJ</option>
-        <opti
+        <option
