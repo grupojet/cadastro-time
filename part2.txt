@@ -1,4 +1,4 @@
-on value="Estágio">Estágio</option>
+ value="Estágio">Estágio</option>
         <option value="Outro">Outro</option>
       </select>
     </div>
@@ -137,4 +137,4 @@ on value="Estágio">Estágio</option>
     document.getElementById('foto_clear').classList.remove('show');
     document.getElementById('foto_status').textContent = 'Opcional agora — recomendado.';
   }
-  document.getElementById('foto_camera').addEventListener('change', function(){ setFoto(this.files && this.file
+  document.getElementById('foto_camera').addEventListener('change', function(){ setFoto(this.files && this.files[0
