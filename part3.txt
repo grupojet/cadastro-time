@@ -1,4 +1,4 @@
-s[0]); });
+]); });
   document.getElementById('foto_galeria').addEventListener('change', function(){ setFoto(this.files && this.files[0]); });
   document.getElementById('foto_clear').addEventListener('click', clearFoto);
 
@@ -68,7 +68,7 @@ s[0]); });
     return true;
   }
 
-  var JOTA_CADASTRO_WEBHOOK = 'https://plates-minute-cloth-specialist.trycloudflare.com/api/cadastro-time';
+  var JOTA_CADASTRO_WEBHOOK = 'https://housewives-borders-monte-wrestling.trycloudflare.com/api/cadastro-time';
 
   async function enviarCadastro() {
     var p = dados();
